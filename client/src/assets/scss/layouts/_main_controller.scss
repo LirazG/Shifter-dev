@@ -1,0 +1,187 @@
+.main-controller {
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    position: relative;
+    background-image: $gradient-primary;
+
+   &__content {
+       width:100%;
+       height: calc(100% - 6rem);
+       padding: 1.6rem;
+       @include displayFlex(row, space-between, center);
+   }
+
+   &__settings {
+       height: 100%;
+       width: 100%;
+       padding: 3rem 2rem;
+       @include displayFlex(row, center, center);
+
+       & > section {
+           width:100%;
+           height: 100%;
+           @include displayFlex(column, flex-start, center);
+       }
+
+       &--form {
+           position: relative;
+           width: 100%;
+           height: 100%;
+           @include displayFlex(column, flex-start, center);
+       }
+
+       &--form > h1 {
+           font-size: 3rem;
+           color: $blackish-text;
+           margin-bottom: 3rem;
+       }
+
+       &--form > .custom-input {
+           margin-bottom: 2rem;
+       }
+
+       &--form > button {
+           position: absolute;
+           bottom: 0;
+           @include button($color-white, $color-primary, $color-white, $color-primary-hover, none);
+       }
+
+       &--form__shifts {
+           width: 100%;
+       }
+
+       &--form__add-shift {
+           width: fit-content;
+           align-self: flex-start;
+           color: $color-secondary;
+           cursor: pointer;
+           margin-top: 2rem;
+           font-size: 2rem;
+           border-bottom: 2px solid $color-secondary; 
+           padding-left: 0.2rem;
+           @include displayFlex(row,space-between,center);
+       }
+
+       &--form__add-shift > svg {
+            font-size: 2.5rem;
+       }
+    }
+   
+}
+
+// 
+
+.shifts__wrapper {
+    width: 100%;
+       
+    &__group {
+        margin-bottom: 3rem;
+        @include displayFlex(row, space-between,center);
+    }
+
+    &__group:last-of-type {
+        margin-bottom: 0;
+    }
+
+    &__group > p { 
+        padding-right: 1rem;
+    }
+
+    &__group--50w { 
+        width:calc(50% - 2rem);
+        @include displayFlex(column,center,center);
+    }
+
+    &__group--100w { 
+        width:100%;
+        @include displayFlex(row,space-between,center);
+
+        & > div {
+            flex-shrink: 1;
+            @include displayFlex(row,flex-start,center);
+        }
+
+        & > div > .custom-input {
+            width: 9rem;
+            margin: 0 1rem;
+        }
+
+        & > p {
+            flex-grow: 1;
+            padding-right: 1rem;
+        }
+    } 
+
+    &__group__figure {
+        flex-shrink: 0;
+        cursor: pointer;
+        @include circle(4rem, $color-secondary);
+        @include displayFlex(row,center,center);
+
+        &:hover {
+            background-color: lighten($color-secondary, 5);
+        }
+
+        &:active {
+            background-color: $color-secondary;
+            transform: scale(0.95);
+            transition: all .1s;
+        }
+    }
+
+    &__group__figure &__group__figure__icon {
+        font-size: 2rem;
+        color: $color-white;
+    }
+
+    &__group__timekeeper--wrapper { 
+        position: relative;
+        width: 100%;
+        @include displayFlex(column,center,center);
+
+        & > p {
+            padding-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        & > button {
+            width: 100%;
+            height: 4rem;
+            border-radius: 5px;
+            background-color: $color-secondary;
+            color: $color-white;
+            font-size: 1.6rem;
+            margin-top: 1rem;
+            transition: all .1s;
+            @include displayFlex(row,center,center);
+        }
+
+        & > button:hover {
+            background-color: lighten($color-secondary, 5);
+        }
+
+        & > button:active {
+            background-color: $color-secondary;
+            transform: scale(0.95);
+            transition: all .1s;
+        }
+
+        & > button > svg {
+            font-size: 2rem;
+            margin-left: 0.5rem;
+        }
+       
+    }
+
+    &__group__timekeeper {
+        position: absolute;
+        top:calc(100% + 1rem);
+        left:50%;
+        transform: translateX(-50%);
+        z-index: 10;
+    }
+
+
+
+}

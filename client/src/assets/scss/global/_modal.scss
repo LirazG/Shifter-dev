@@ -1,0 +1,72 @@
+.custom-modal {
+    position: fixed;
+    top:0;
+    left:0;
+    height: 100vh;
+    width: 100vw;
+    display: none;
+
+    &--active {
+       animation-name: activeModal;
+       animation-duration: 0.2s;
+       animation-fill-mode: forwards;
+       display: block;
+    }
+
+    &--active &__content {
+        animation-name: activeModalContent;
+        animation-duration: 0.4s;
+        animation-fill-mode: forwards;
+    }
+
+    &__curtain {
+        height: 100%;
+        width: 100%;
+        background-color: $modal-curtain;
+    }
+
+    &__content {
+        height: 80%;
+        width: 100%;
+        max-width: 50rem;
+        background-color: $color-white;
+        border-radius: 5px;
+        position: absolute;
+        top: 2rem;
+        left:50%;
+        border-top: 10px solid $color-primary;
+        transform: translate3d(-50%, -10%, 0);
+
+        .custom-modal &__close-icon {
+            position: absolute;
+            top:2rem;
+            right:2rem;
+            cursor: pointer;
+            font-size: 2.5rem;
+            z-index: 20;
+        }
+    }
+
+
+}
+
+
+@keyframes activeModal {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes activeModalContent {
+    0% {
+        transform: translate3d(-50%, -10%, 0);
+    }
+
+    100% {
+        transform: translate3d(-50%, 0, 0);
+    }
+}

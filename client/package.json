@@ -1,0 +1,47 @@
+{
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "js-cookie": "^2.2.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-scripts": "3.4.1",
+    "react-timekeeper": "^2.1.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "watch-sass": "node-sass -w ./src/assets/scss/main.scss ./src/index.css",
+    "complie-sass": "node-sass ./src/assets/scss/main.scss ./src/index.css",
+    "prefix-css": "postcss --use autoprefixer -b \"last 10 versions\" ./src/index.css -o ./src/index.css ",
+    "compress-css": "node-sass ./src/index.css ./src/index.css --output-style compressed",
+    "build-css": "npm-run-all complie-sass prefix-css compress-css",
+    "prebuild": "yarn run build-css"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "autoprefixer": "7.1.4",
+    "node-sass": "4.13.0",
+    "npm-run-all": "^4.1.5",
+    "postcss-cli": "4.1.1"
+  }
+}

@@ -1,0 +1,71 @@
+@mixin displayFlex($dir: row, $just: unset, $align: unset) {
+    display: flex;
+    flex-direction: $dir;
+    justify-content: $just;
+    align-items: $align;
+}
+
+@mixin button(
+    $color: $blackish-text,
+    $bg: $color-white ,
+    $hover-color: $color-primary-light,
+    $bg-hover-color: $color-white,
+    $shadow: $light-shadow
+){
+    height: 5.4rem;
+    width: 22rem;
+    border-radius: 3rem;
+    background-color: $bg;
+    box-shadow: $shadow;
+    transition: all .3s;
+    overflow: hidden;
+    flex-shrink: 0;
+    @include displayFlex(row,center,center);
+
+    & > span {
+        color: $color;
+        font-size: 1.4rem;
+        text-transform: capitalize;
+        font-weight: 600;
+        transition: all .3s;
+        height: 100%;
+        letter-spacing: 0.5px;
+        @include displayFlex(row,center,center);
+    }
+
+    &:hover {
+        transition: all .3s;
+        box-shadow: none;
+        background-color: $bg-hover-color;
+
+        & > span {
+            transition: all .3s;
+            color: $hover-color;
+        }
+    }
+
+    &:active {
+        background-color: $bg;
+    }
+}
+
+@mixin triangle($size: 10rem, $color: rgba(255, 255, 255, 0.1)) {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 $size $size*1.6 $size;
+    border-color: transparent transparent $color transparent;
+}
+
+@mixin circle($size: 10rem,  $color: rgba(255, 255, 255, 0.1)) {
+    width: $size;
+    height: $size;
+    border-radius: 50%;
+    background-color: $color;
+}
+
+@mixin square($size: 10rem,  $color: rgba(255, 255, 255, 0.1)) {
+    width: $size * 2;
+    height: $size;
+    background-color: $color;
+}

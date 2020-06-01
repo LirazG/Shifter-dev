@@ -1,0 +1,14 @@
+//abstracts folder
+@import '../scss/abstracts/_variables';
+@import '../scss/abstracts/_mixins';
+//global folder
+@import '../scss/global/_reset';
+@import '../scss/global/form_components';
+@import '../scss/global/navbar';
+@import '../scss/global/modal';
+//layout folder
+@import '../scss/layouts/auth_page';
+@import '../scss/layouts/main_controller';
+@import '../scss/layouts/employees';
+@import '../scss/layouts/calender';
+

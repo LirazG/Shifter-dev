@@ -1,0 +1,29 @@
+.navbar {
+    width:100%;
+    height: 6rem;
+    padding: 0 1.6rem;
+    background-color: $color-white;
+    box-shadow: $light-shadow;
+    @include displayFlex(row,space-between,center);
+
+    &__logo {
+        height: 100%;
+    }
+
+    &__cta {
+        @include displayFlex(row,center,center);
+
+        & > &__icon {
+            margin-left: 1rem;
+            font-size: 3rem;
+            color: $color-primary;
+            cursor: pointer;
+            transition: all .1s;
+        }
+
+        & > &__icon:hover {
+            transition: all .1s;
+            transform: scale(1.2);
+        }
+    }
+}

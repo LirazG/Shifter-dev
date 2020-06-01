@@ -1,0 +1,174 @@
+.auth-page {
+    width: 100%;
+    height: 100vh;
+    @include displayFlex(row);
+
+
+    &__flipper {
+        background-image: $gradient-primary;
+        color: $color-white;
+        width: 40rem;
+        height: 100%;
+        flex-shrink: 0;
+        position: relative;
+        overflow: hidden;
+        @include displayFlex(column,center,center);
+
+        &__shape {
+            position: absolute;
+            z-index: 0;
+
+            &:nth-of-type(1) {
+                bottom:10%;
+                left: 30%;
+                transform: rotate(40deg);
+                @include triangle();
+            }
+
+            &:nth-of-type(2) {
+                top: 10%;
+                left: -10%;
+                @include circle(25rem);
+            }
+
+            &:nth-of-type(3) {
+                top:55%;
+                left: -20%;
+                transform: rotate(20deg);
+                @include square();
+            }
+            
+        }
+
+        &__main-text {
+            @include displayFlex(column,center,center);
+            position: relative;
+            width: 100%;
+            height: 24rem;
+        }
+
+        &__text-fade {
+            width:100%;
+            position: absolute;
+            top:0;
+            transition: transform .5s, opacity .2s;
+            opacity: 1;
+            
+            &:nth-of-type(1) {
+                left:0;
+            }
+            &:nth-of-type(2) {
+                left:100%;
+                transform: translateX(-100%);
+            }
+        }
+
+        &__text-fade--active {
+            transition: transform .5s, opacity .2s;
+            opacity: 0;
+
+            &:nth-of-type(1) {
+                transform: translateX(-100%);
+            }
+            &:nth-of-type(2) {
+                transform: translateX(0%);
+            }
+        }
+
+        &__main-text h1 {
+            font-size: 4.8rem;
+            font-weight: bold;
+            text-align: center;
+            text-transform: capitalize;
+            margin-bottom: 3rem;
+            line-height: 5.8rem;
+        }
+
+        &__main-text p {
+            font-size: 2.2rem;
+            letter-spacing: 0;
+            line-height: 3.6rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 0 1rem;
+        }
+
+        & > button {
+            position: relative;
+            @include button();
+        }
+    }
+
+    &__content {
+        flex-grow: 1;
+        @include displayFlex(row,center,center);
+    }
+
+    &__form {
+        width: 100%;
+        max-width: 69rem;
+        position: relative;
+        @include displayFlex(column,center,center);
+
+        &__wrapper {
+            width: 100%;
+            height: 100%;
+            min-height: 48rem;
+            position: absolute;
+            transition: all .5s;
+            transform: scale(0);
+            opacity: 0;
+            z-index: -1;
+            @include displayFlex(column,center,center);
+        }
+
+        &__wrapper--active {
+            transition: all .5s;
+            transform: scale(1);
+            opacity: 1;
+            z-index: 1;
+        }
+
+        &__wrapper > button {
+            @include button($color-white, $color-primary, $color-white, $color-primary-hover, none);
+        }
+
+        &__wrapper > h1 {
+            color: $blackish-text;
+            font-size: 5.6rem;
+        }
+
+        &__wrapper__group > figure {
+            width: 100%;
+            height: 1px;
+            border-bottom: 1px solid $color-primary;
+            opacity: 0.5;
+            margin: 1rem 0;
+            padding-top:1rem;
+        }
+
+        &__wrapper__group {
+            width:100%;
+            max-width: 46rem;
+            margin-bottom: 2rem;
+        }
+
+        &__wrapper__group__error {
+            color: $color-error;
+            font-size: 1.4rem;
+            margin-top: 0.6rem;
+            margin-left: 0.5rem;
+        }
+
+        &__wrapper__demo-login {
+            color: $color-primary;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-decoration: underline;
+            margin-top: 4rem;
+            cursor: pointer;
+        }
+
+    }
+}
+
