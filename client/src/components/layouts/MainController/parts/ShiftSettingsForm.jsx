@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { Fragment, useState, useEffect, useRef, useContext } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
 import MuiExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -7,7 +7,9 @@ import Typography from '@material-ui/core/Typography';
 import SvgIcon from '@material-ui/core/SvgIcon';
 //components
 import TimeKeeperWrapper from './TimeKeeperWrapper';
+import ShiftHeader from './ShiftHeader';
 import CustomInput from '../../../globals/formComponents/CustomInput';
+import Spinner from '../../../globals/spinners/Spinner';
 //context
 import { UserDataContext } from '../../../../contexts/UserDataContext';
 //icons
@@ -63,6 +65,7 @@ const ExpansionPanelDetails = withStyles((theme) => ({
 const ShiftSettingsForm = (props) => {
     const { userData } = useContext(UserDataContext);
     const [expanded, setExpanded] = useState(null);
+    const [loading, setLoading] = useState(false);
     const [shifts, setShifts] = useState([]);
 
     //fetch shifts on mount
@@ -95,9 +98,11 @@ const ShiftSettingsForm = (props) => {
 
     const submit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         let newShifts = await generalPostRequest(UPDATE_SHIFTS, { userId: userData._id, shifts }, 'put');
         if (newShifts.status === 200) {
             setShifts(newShifts.data);
+            setLoading(false);
         }
     }
 
@@ -114,7 +119,7 @@ const ShiftSettingsForm = (props) => {
                 {shifts.map((shift, shiftIndex) =>
                     <ExpansionPanel square expanded={expanded === `panel${shiftIndex}`} onChange={handleActiveMenu(`panel${shiftIndex}`)}>
                         <ExpansionPanelSummary aria-controls={`panel${shiftIndex}d-content`} id={`panel${shiftIndex}d-header`}>
-                            <p>{shift.name}</p>
+                            <ShiftHeader name={shift.name} />
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
                             <div className="shifts__wrapper">
@@ -187,9 +192,19 @@ const ShiftSettingsForm = (props) => {
                 <SvgIcon
                     component={AddIcon}
                 />
+
             </span>
 
-            <button type="submit"><span>Save Changes</span></button>
+            <button type="submit" style={loading ? { pointerEvents: 'none', opacity: '0.6' } : {}}>
+                {!loading ?
+                    <span>Save Changes</span>
+                    :
+                    <Fragment>
+                        <Spinner size={40} />
+                        <span>Saving...</span>
+                    </Fragment>
+                }
+            </button>
         </form>
     )
 }

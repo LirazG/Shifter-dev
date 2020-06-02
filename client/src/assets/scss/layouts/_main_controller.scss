@@ -72,6 +72,15 @@
 
 // 
 
+.shifts__header {
+    width: 100%;
+    @include displayFlex(row, space-between,center);
+
+    & > svg {
+        font-size: 2rem;
+    }
+}
+
 .shifts__wrapper {
     width: 100%;
        

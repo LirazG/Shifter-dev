@@ -3,4 +3,60 @@
     width: calc(75% - 0.8rem);
     background-color: $color-white;
     border-radius: 5px;
+    padding:1.6rem;
+
+    &__header {
+        width: 100%;
+        height: 5rem;
+        @include displayFlex(row, space-between, center);
+    }
+
+    &__header__section {
+        @include displayFlex(row, space-between, center);
+
+        & > p {
+            font-weight: bold;
+            font-size: 2rem;
+            color: $blackish-text;
+        }
+
+        & > figure {
+            cursor: pointer;
+            transition: all .2s;
+            @include circle(3rem, $color-primary);
+            @include displayFlex(row, center, center);
+
+            &:hover {
+                transform: scale(1.1);
+                transition: all .1s;
+            }
+        }
+
+        & > figure > svg {
+            color: $color-white;
+            font-size: 3rem;
+        }
+
+        & > button {
+            height: 3rem;
+            border-radius: 5px;
+            background-color: $color-white;
+            border: 2px solid $color-primary;
+            color: $color-primary;
+            font-weight: bold;
+            font-size: 1.6rem;
+            margin: 0 1rem;
+            transition: all .1s;
+            @include displayFlex(row, center, center);
+        }
+
+        & > button > svg {
+            font-size: 2rem;
+        }
+
+        & > button:hover {
+            transform: scale(1.05);
+            transition: all .1s;
+        }
+    }
 }

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { DragDropContext } from 'react-beautiful-dnd';
 import Navbar from '../../globals/navbar/Navbar';
 import Calender from '../../layouts/calender/Calender';
 import Employees from '../../layouts/employees/Employees';
@@ -18,7 +19,11 @@ const MainController = () => {
             >
                 <div className="main-controller__settings">
                     <section>
-                        <ShiftSettingsForm active={activeModal} />
+                        {activeModal ?
+                            <ShiftSettingsForm active={activeModal} />
+                            :
+                            null
+                        }
                     </section>
                 </div>
             </CustomModal>
@@ -27,8 +32,10 @@ const MainController = () => {
                 toggleSettingsModal={setActiveModal.bind(null, !activeModal)}
             />
             <div className="main-controller__content">
-                <Calender />
-                <Employees />
+                <DragDropContext>
+                    <Calender />
+                    <Employees />
+                </DragDropContext>
             </div>
         </div>
     )

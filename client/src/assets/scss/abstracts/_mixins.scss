@@ -69,3 +69,29 @@
     height: $size;
     background-color: $color;
 }
+
+@mixin customScrollbar ($track-color: transparent, $thumb-color: white) {
+    &::-webkit-scrollbar { 
+        width: 14px;
+    }
+    &::-webkit-scrollbar-track {  
+        background-color: transparent;
+        border-radius: 15px;
+    }
+    &::-webkit-scrollbar-track-piece { 
+        background-color: $track-color;
+    }
+    &::-webkit-scrollbar-thumb { 
+        height: 50px;
+        background-color: $thumb-color;
+        border-radius: 10px;
+        border: 3px solid $color-secondary;
+    }
+    &::-webkit-scrollbar-corner { 
+        background-color: #646464;
+    }
+    &::-webkit-resizer { 
+        background-color: #666;
+    }
+    
+}
