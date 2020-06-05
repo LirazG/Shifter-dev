@@ -12,6 +12,9 @@ import CustomInput from '../../../globals/formComponents/CustomInput';
 import Spinner from '../../../globals/spinners/Spinner';
 //context
 import { UserDataContext } from '../../../../contexts/UserDataContext';
+import { ShiftConfigurationContext } from '../../../../contexts/ShiftConfigurationContext';
+//types
+import { SET_SHIFTS } from '../../../../reducers/shiftConfigurationReducer';
 //icons
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
@@ -64,27 +67,19 @@ const ExpansionPanelDetails = withStyles((theme) => ({
 
 const ShiftSettingsForm = (props) => {
     const { userData } = useContext(UserDataContext);
+    const { shiftConfigs, shiftConfigsDispatch } = useContext(ShiftConfigurationContext);
+
     const [expanded, setExpanded] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [shifts, setShifts] = useState([]);
-
-    //fetch shifts on mount
-    useEffect(() => {
-        (async () => {
-            let shifts = await generalGetRequest(`${FETCH_SHIFTS}/?userId=${userData._id}`);
-            if (shifts.status === 200)
-                setShifts(shifts.data);
-        })();
-    }, []);
 
     const handleActiveMenu = (panel) => (event, newExpanded) => {
         setExpanded(newExpanded ? panel : false);
     };
 
     const addShift = () => {
-        if (shifts.length >= 4)
+        if (shiftConfigs.length >= 4)
             return
-        let newShifts = shifts.map(shift => shift);
+        let newShifts = shiftConfigs.map(shift => shift);
         newShifts.push(
             {
                 name: `New Shift ${newShifts.length + 1}`,
@@ -93,30 +88,33 @@ const ShiftSettingsForm = (props) => {
                 numberOfEmployees: null
             }
         );
-        setShifts(newShifts);
+        shiftConfigsDispatch({ type: SET_SHIFTS, payload: newShifts });
     }
 
     const submit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        let newShifts = await generalPostRequest(UPDATE_SHIFTS, { userId: userData._id, shifts }, 'put');
+        let newShifts = await generalPostRequest(UPDATE_SHIFTS, { userId: userData._id, shifts: shiftConfigs }, 'put');
         if (newShifts.status === 200) {
-            setShifts(newShifts.data);
+            shiftConfigsDispatch({ type: SET_SHIFTS, payload: newShifts.data })
+            setLoading(false);
+        } else {
+            alert(JSON.stringify(newShifts.data.errors.map(err => err.msg)))
             setLoading(false);
         }
     }
 
     const handleShiftChange = (index, name, value) => {
-        let newShifts = shifts.map(shift => shift);
+        let newShifts = shiftConfigs.map(shift => shift);
         newShifts[index][name] = value;
-        setShifts(newShifts)
+        shiftConfigsDispatch({ type: SET_SHIFTS, payload: newShifts });
     }
 
     return (
         <form className="main-controller__settings--form" onSubmit={submit}>
             <h1>Daily shift arrangement</h1>
             <div className="main-controller__settings--form__shifts">
-                {shifts.map((shift, shiftIndex) =>
+                {shiftConfigs.map((shift, shiftIndex) =>
                     <ExpansionPanel square expanded={expanded === `panel${shiftIndex}`} onChange={handleActiveMenu(`panel${shiftIndex}`)}>
                         <ExpansionPanelSummary aria-controls={`panel${shiftIndex}d-content`} id={`panel${shiftIndex}d-header`}>
                             <ShiftHeader name={shift.name} />

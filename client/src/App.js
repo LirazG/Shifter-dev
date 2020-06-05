@@ -13,9 +13,9 @@ import { VALIDATE_USER } from './config/routes';
 import { generalGetRequest } from './functions/api';
 //context 
 import UserDataContextProvider, { UserDataContext } from './contexts/UserDataContext';
+import ShiftConfigurationContext from './contexts/ShiftConfigurationContext';
 
 const App = () => {
-
     return (
         <Router>
             <UserDataContextProvider>
@@ -23,7 +23,9 @@ const App = () => {
                     return context.userData == null ?
                         null :
                         context.userData._id ?
-                            <Route path="/" component={MainController} />
+                            <ShiftConfigurationContext>
+                                <Route path="/" component={MainController} />
+                            </ShiftConfigurationContext>
                             :
                             <Route path="/" component={Auth} />
                 }}

@@ -1,13 +1,14 @@
 .calender {
     height: 100%;
-    width: calc(75% - 0.8rem);
+    width: calc(85% - 0.8rem);
     background-color: $color-white;
     border-radius: 5px;
     padding:1.6rem;
 
     &__header {
         width: 100%;
-        height: 5rem;
+        height: 6.6rem;
+        padding-bottom:1.6rem;
         @include displayFlex(row, space-between, center);
     }
 
@@ -58,5 +59,64 @@
             transform: scale(1.05);
             transition: all .1s;
         }
+    }
+
+    //calender body
+
+    &__week {
+        height: calc(100% - 6.6rem);
+        border:1px solid $color-gray;
+        border-radius: 5px;
+        @include displayFlex(row);
+
+        &__header {
+            height: 4rem;
+            background-color: $color-primary;
+            color: $color-white;
+            font-size: 1.7rem;
+            font-weight: bold;
+            width: 100%;
+            @include displayFlex(column,center,center);
+        }
+
+        &__day {
+            width: calc(100% / 7);
+            height: 100%;
+            border-right: 1px solid $color-gray;
+        }
+
+        &__day:last-of-type {
+            border:none;
+        }
+
+        &__shifts {
+            height: 100%;
+            @include displayFlex(column,flex-start,space-between);
+        }
+
+        &__shifts__container {
+            width: 100%;
+        }
+
+        &__shifts__container > header {
+            width: 100%;
+            height: 2.5rem;
+            background-color: $color-light-gray;
+            color:black;
+            @include displayFlex(row,center,center);
+        }
+
+        &__shifts__container > header > svg {
+            font-size: 2rem;
+            margin-left: 0.5rem;
+            cursor: pointer;
+        }
+    }
+
+
+    // calender drop area
+    &__droppable {
+        height: calc(100% - 2.5rem);
+        padding: 0 0.6rem;
     }
 }

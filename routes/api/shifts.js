@@ -30,7 +30,7 @@ router.get('/getShiftsForUser', [
                 return res.status(400).json({ errors: [{ param: '', msg: 'User not Found' }] });
             }
 
-            let shifts = await Shift.find({ userId }).select(['name', 'numberOfWorkers', 'startHour', 'endHour']).sort('date');
+            let shifts = await Shift.find({ userId }).select(['name', 'numberOfEmployees', 'startHour', 'endHour']).sort('date');
             res.send({ status: 200, data: shifts });
 
         } catch (err) {
@@ -75,13 +75,13 @@ router.put('/updateShifts', [
 
             Promise.all(shifts.map(async (shift) => {
                 if (shift._id) {
-                    Shift.findByIdAndUpdate(shift._id, shift).exec();
+                    await Shift.findByIdAndUpdate(shift._id, shift);
                 } else {
                     let newShift = new Shift({ ...shift, userId });
                     await newShift.save();
                 }
             })).then(async () => {
-                let shiftsToSend = await Shift.find({ userId }).select(['name', 'numberOfWorkers', 'startHour', 'endHour']).sort('date');
+                let shiftsToSend = await Shift.find({ userId }).select(['name', 'numberOfEmployees', 'startHour', 'endHour']).sort('date');
                 res.send({ status: 200, data: shiftsToSend });
             });
 

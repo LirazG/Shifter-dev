@@ -657,7 +657,7 @@ input[type=number] {
 
 .employees-list {
   height: 100%;
-  width: calc(25% - 0.8rem);
+  width: calc(15% - 0.8rem);
   background-color: #fff;
   border-radius: 5px;
   padding: 1.6rem;
@@ -671,7 +671,7 @@ input[type=number] {
     height: 5rem;
     border: 2px solid #28b498;
     border-radius: 2.5rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1.6rem;
     flex-shrink: 0;
     display: flex;
     flex-direction: row;
@@ -703,7 +703,7 @@ input[type=number] {
     border-radius: 10px;
     padding: 1rem;
     border: 1px solid #808080;
-    background-image: linear-gradient(253deg, #3ba5b4 0, #38ba8a 100%);
+    background-color: #fff;
     overflow-y: auto; }
     .employees-list__content::-webkit-scrollbar {
       width: 14px; }
@@ -711,16 +711,22 @@ input[type=number] {
       background-color: transparent;
       border-radius: 15px; }
     .employees-list__content::-webkit-scrollbar-track-piece {
-      background-color: transparent; }
+      display: none; }
     .employees-list__content::-webkit-scrollbar-thumb {
       height: 50px;
-      background-color: white;
+      background-color: #28b498;
       border-radius: 10px;
-      border: 3px solid #3ba5b4; }
+      border: 3px solid white; }
     .employees-list__content::-webkit-scrollbar-corner {
       background-color: #646464; }
     .employees-list__content::-webkit-resizer {
       background-color: #666; }
+    .employees-list__content__employee {
+      width: 100%;
+      height: 4rem;
+      border-radius: 5px;
+      margin-bottom: 1rem;
+      background-color: pink; }
   .employees-list__footer {
     width: 100%;
     height: 5rem;
@@ -730,6 +736,7 @@ input[type=number] {
     justify-content: center;
     align-items: center; }
     .employees-list__footer > button {
+      max-width: 100%;
       height: 5.4rem;
       width: 22rem;
       border-radius: 3rem;
@@ -766,13 +773,14 @@ input[type=number] {
 
 .calender {
   height: 100%;
-  width: calc(75% - 0.8rem);
+  width: calc(85% - 0.8rem);
   background-color: #fff;
   border-radius: 5px;
   padding: 1.6rem; }
   .calender__header {
     width: 100%;
-    height: 5rem;
+    height: 6.6rem;
+    padding-bottom: 1.6rem;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -822,3 +830,52 @@ input[type=number] {
     .calender__header__section > button:hover {
       transform: scale(1.05);
       transition: all .1s; }
+  .calender__week {
+    height: calc(100% - 6.6rem);
+    border: 1px solid #808080;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: unset;
+    align-items: unset; }
+    .calender__week__header {
+      height: 4rem;
+      background-color: #28b498;
+      color: #fff;
+      font-size: 1.7rem;
+      font-weight: bold;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center; }
+    .calender__week__day {
+      width: calc(100% / 7);
+      height: 100%;
+      border-right: 1px solid #808080; }
+    .calender__week__day:last-of-type {
+      border: none; }
+    .calender__week__shifts {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: space-between; }
+    .calender__week__shifts__container {
+      width: 100%; }
+    .calender__week__shifts__container > header {
+      width: 100%;
+      height: 2.5rem;
+      background-color: #d3d3d2;
+      color: black;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center; }
+    .calender__week__shifts__container > header > svg {
+      font-size: 2rem;
+      margin-left: 0.5rem;
+      cursor: pointer; }
+  .calender__droppable {
+    height: calc(100% - 2.5rem);
+    padding: 0 0.6rem; }
