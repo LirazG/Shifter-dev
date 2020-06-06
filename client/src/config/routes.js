@@ -6,3 +6,5 @@ export const VALIDATE_USER = `${API_URL}/api/auth/validateUser`;
 //shift routes
 export const FETCH_SHIFTS = `${API_URL}/api/shifts/getShiftsForUser`;
 export const UPDATE_SHIFTS = `${API_URL}/api/shifts/updateShifts`;
+//employees routes
+export const ADD_EMPLOYEE = `${API_URL}/api/employees`;

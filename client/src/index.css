@@ -340,7 +340,8 @@ input[type=number] {
       flex-direction: row;
       justify-content: center;
       align-items: center; }
-      .auth-page__flipper > button > span {
+      .auth-page__flipper > button > span,
+      .auth-page__flipper > button > svg {
         color: #1a1e1d;
         font-size: 1.4rem;
         text-transform: capitalize;
@@ -406,7 +407,8 @@ input[type=number] {
       flex-direction: row;
       justify-content: center;
       align-items: center; }
-      .auth-page__form__wrapper > button > span {
+      .auth-page__form__wrapper > button > span,
+      .auth-page__form__wrapper > button > svg {
         color: #fff;
         font-size: 1.4rem;
         text-transform: capitalize;
@@ -512,7 +514,8 @@ input[type=number] {
       flex-direction: row;
       justify-content: center;
       align-items: center; }
-      .main-controller__settings--form > button > span {
+      .main-controller__settings--form > button > span,
+      .main-controller__settings--form > button > svg {
         color: #fff;
         font-size: 1.4rem;
         text-transform: capitalize;
@@ -533,6 +536,8 @@ input[type=number] {
           color: #fff; }
       .main-controller__settings--form > button:active {
         background-color: #28b498; }
+    .main-controller__settings--form__errors {
+      color: #ff1111; }
     .main-controller__settings--form__shifts {
       width: 100%; }
     .main-controller__settings--form__add-shift {
@@ -657,7 +662,7 @@ input[type=number] {
 
 .employees-list {
   height: 100%;
-  width: calc(15% - 0.8rem);
+  width: calc(11vw + 5.9rem);
   background-color: #fff;
   border-radius: 5px;
   padding: 1.6rem;
@@ -749,7 +754,8 @@ input[type=number] {
       flex-direction: row;
       justify-content: center;
       align-items: center; }
-      .employees-list__footer > button > span {
+      .employees-list__footer > button > span,
+      .employees-list__footer > button > svg {
         color: #fff;
         font-size: 1.4rem;
         text-transform: capitalize;
@@ -773,7 +779,7 @@ input[type=number] {
 
 .calender {
   height: 100%;
-  width: calc(85% - 0.8rem);
+  width: calc(89vw - 10.7rem);
   background-color: #fff;
   border-radius: 5px;
   padding: 1.6rem; }
@@ -878,4 +884,4 @@ input[type=number] {
       cursor: pointer; }
   .calender__droppable {
     height: calc(100% - 2.5rem);
-    padding: 0 0.6rem; }
+    padding: 0.6rem; }

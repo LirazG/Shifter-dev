@@ -21,6 +21,7 @@ app.use(cors({ origin: true, credentials: true }));
 if (config.get('mongoURI')) {
     app.use('/api/auth', require('./routes/api/auth'));
     app.use('/api/shifts', require('./routes/api/shifts'));
+    app.use('/api/employees', require('./routes/api/employees'));
 } else {
     console.error(consoleErrorColor, 'Routes dependent of DB cannot be initialized into app')
 }

@@ -94,8 +94,8 @@ const AuthForm = (props) => {
             let loginRes = await generalPostRequest(AUTH_ROUTES_LOGIN, loginFormData);
             if (loginRes.data) {
                 //set errors in state for display
-                let errors = {}
-                loginRes.data.errors.map(err => { errors[err.param] = err.msg })
+                let errors = {};
+                loginRes.data.errors.map(err => { errors[err.param] = err.msg });
                 setLoginFormErrors(errors);
                 return;
             } else {

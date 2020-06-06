@@ -1,6 +1,7 @@
 .calender {
     height: 100%;
-    width: calc(85% - 0.8rem);
+    // width: calc(85% - 0.8rem);
+    width: calc(89vw - 10.7rem);
     background-color: $color-white;
     border-radius: 5px;
     padding:1.6rem;
@@ -117,6 +118,6 @@
     // calender drop area
     &__droppable {
         height: calc(100% - 2.5rem);
-        padding: 0 0.6rem;
+        padding: 0.6rem;
     }
 }

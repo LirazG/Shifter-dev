@@ -179,6 +179,7 @@ const ShiftSettingsForm = (props) => {
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                         </ExpansionPanelDetails>
                     </ExpansionPanel>

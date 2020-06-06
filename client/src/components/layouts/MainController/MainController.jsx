@@ -20,6 +20,7 @@ import ShiftSettingsForm from './parts/ShiftSettingsForm';
 const MainController = () => {
 
     const [activeModal, setActiveModal] = useState(false);
+    const [lastDragActionData, setLastDragActionData] = useState(null);
     const { shiftConfigsDispatch } = useContext(ShiftConfigurationContext);
     const { userData } = useContext(UserDataContext);
 
@@ -31,6 +32,14 @@ const MainController = () => {
                 shiftConfigsDispatch({ type: SET_SHIFTS, payload: shifts.data });
         })();
     }, []);
+
+    const onDragEnd = (data) => {
+        if (!data.destination || !data.source)
+            return;
+        if (data.destination.droppableId === data.source.droppableId && data.destination.index === data.source.index)
+            return;
+        setLastDragActionData(data);
+    }
 
     return (
         <div className="main-controller">
@@ -56,8 +65,8 @@ const MainController = () => {
                 toggleSettingsModal={setActiveModal.bind(null, 'settings')}
             />
             <div className="main-controller__content">
-                <DragDropContext>
-                    <Calender />
+                <DragDropContext onDragEnd={onDragEnd}>
+                    <Calender dndAction={lastDragActionData} />
                     <Employees openAddEmployeeModal={setActiveModal.bind(null, 'addEmployee')} />
                 </DragDropContext>
             </div>

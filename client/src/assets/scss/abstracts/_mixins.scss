@@ -22,7 +22,8 @@
     flex-shrink: 0;
     @include displayFlex(row,center,center);
 
-    & > span {
+    & > span,
+    & > svg {
         color: $color;
         font-size: 1.4rem;
         text-transform: capitalize;

@@ -47,6 +47,10 @@
            @include button($color-white, $color-primary, $color-white, $color-primary-hover, none);
        }
 
+       &--form__errors {
+           color:$color-error;
+       }
+
        &--form__shifts {
            width: 100%;
        }

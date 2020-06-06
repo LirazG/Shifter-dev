@@ -1,19 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../../middleware/auth');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const config = require('config');
 const { check, validationResult } = require('express-validator');
 // models
-const User = require('../../models/User');
+const Employee = require('../../models/Employee');
 
+// @route  POST api/employees
+// @desc   Add employee
+// @access Private
 
-// @route  POST api/auth
-// @desc   Register user
-// @access Public
 router.post('/', [
-    check('userId', 'userId is required').not().isEmpty()
+    auth,
+    check('userId', 'userId is required').not().isEmpty(),
     check('fullName', 'Name is required').not().isEmpty()
 ], async (req, res) => {
 
@@ -26,12 +24,13 @@ router.post('/', [
 
     const { userId, fullName, phone, title } = req.body;
 
-    //See if users exists
+    //See if employee exists
     try {
-        let user = await User.findOne({ _id: userId });
-        if (!user) {
-            return res.status(400).json({ errors: [{ param: 'userId', msg: 'No user found for employer' }] });
+        let employee = await Employee.findOne({ fullName });
+        if (employee) {
+            return res.status(400).json({ errors: [{ param: 'fullName', msg: 'Employee already exists' }] });
         }
+
     } catch (err) {
         console.log(err.message);
         res.status(500).send('Server error');
@@ -45,10 +44,13 @@ router.post('/', [
     });
 
     await employee.save();
-    res.send({ success: true });
-
-    //res.json / res.send
+    res.send({ status: 200 });
 
 });
+
+
+// @route  GET api/employees/getEmployees
+// @desc   get employees list
+// @access Private
 
 module.exports = router;

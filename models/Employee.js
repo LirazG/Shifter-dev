@@ -7,11 +7,11 @@ const EmployeeSchema = new mongoose.Schema({
     },
     fullName: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     phone: {
-        type: String,
-        required: true
+        type: String
     },
     title: {
         type: String
