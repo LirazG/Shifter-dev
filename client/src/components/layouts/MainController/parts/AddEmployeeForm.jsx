@@ -41,7 +41,7 @@ const AddEmployeeForm = () => {
             setAddEmployeeFormData({});
             setTimeout(() => {
                 setSuccessMessage(false);
-            }, 3000);
+            }, 2000);
 
         } else {
             //set errors in state for display
@@ -78,7 +78,13 @@ const AddEmployeeForm = () => {
                 :
                 null
             }
-            <button style={successMessage ? { transform: 'scale(1.1)', transition: 'all .2s' } : { transition: 'all .2s' }}>
+            <button
+                style={successMessage ?
+                    { transform: 'scale(1.1)', transition: 'all .2s', pointerEvents: 'none' }
+                    :
+                    { transition: 'all .2s' }
+                }
+            >
                 {loading ?
                     <Fragment>
                         <Spinner size={40} />

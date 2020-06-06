@@ -3,6 +3,7 @@ const router = express.Router();
 const auth = require('../../middleware/auth');
 const { check, validationResult } = require('express-validator');
 // models
+const User = require('../../models/User');
 const Employee = require('../../models/Employee');
 
 // @route  POST api/employees
@@ -52,5 +53,33 @@ router.post('/', [
 // @route  GET api/employees/getEmployees
 // @desc   get employees list
 // @access Private
+
+router.get('/getEmployees', [
+    auth
+], async (req, res) => {
+
+    //check for errors
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { skip, limit, userId } = req.query;
+
+    try {
+        let user = await User.findOne({ _id: userId });
+        if (!user) {
+            return res.status(400).json({ errors: [{ param: '', msg: 'User not Found' }] });
+        }
+
+        let employees = await Employee.find({ userId }).skip(Number(skip)).limit(Number(limit));
+        res.send({ status: 200, data: employees });
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).send('Server error');
+    }
+
+});
 
 module.exports = router;
