@@ -9,3 +9,8 @@ export const UPDATE_SHIFTS = `${API_URL}/api/shifts/updateShifts`;
 //employees routes
 export const ADD_EMPLOYEE = `${API_URL}/api/employees`;
 export const GET_EMPLOYEES = `${API_URL}/api/employees/getEmployees`;
+//deployment
+export const DEPLOY = `${API_URL}/api/deployment`;
+export const FETCH_DEPLOYMENTS = `${API_URL}/api/deployment/getDeployments`;
+
+

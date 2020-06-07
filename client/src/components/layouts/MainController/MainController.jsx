@@ -34,7 +34,7 @@ const MainController = () => {
     }, []);
 
     const onDragEnd = (data) => {
-        if (!data.destination || !data.source)
+        if (!data.destination || !data.source || data.destination.droppableId === 'employee-list')
             return;
         if (data.destination.droppableId === data.source.droppableId && data.destination.index === data.source.index)
             return;

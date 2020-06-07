@@ -20,7 +20,7 @@ const Employees = (props) => {
 
     const { userData } = useContext(UserDataContext);
 
-    //fetch employees on mount
+    //fetch employees data on mount
     useEffect(() => {
         (async () => {
             await fetchData();
@@ -38,7 +38,7 @@ const Employees = (props) => {
         }
     }
 
-    //scroll handler
+    //scroll handler fetching more employees on scroll
     const handleListScroll = () => {
         let scrolledDiv = document.getElementsByClassName("employees-list__content")[0];
         //calc scroll bottom for more data fetching (number 2 is 1 px border top and bottom, 100 is px offset for data fetch)
