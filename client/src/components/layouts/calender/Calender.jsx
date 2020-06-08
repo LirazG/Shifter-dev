@@ -8,8 +8,9 @@ import { ShiftConfigurationContext } from '../../../contexts/ShiftConfigurationC
 import { UserDataContext } from '../../../contexts/UserDataContext';
 //components
 import CalenderHeader from './parts/CalenderHeader';
-//api
+//functions
 import { generalPostRequest, generalGetRequest } from '../../../functions/api';
+import { throttling } from '../../../functions/general';
 //routes
 import { DEPLOY, FETCH_DEPLOYMENTS } from '../../../config/routes';
 
@@ -25,6 +26,7 @@ const initialDeployments = [
 
 const Calender = (props) => {
     const [selectedDate, setSelectedDate] = useState(moment());
+    const [selectedDateThrottleTimeout, setSelectedDateThrottleTimeout] = useState(null);
     const [weekShifts, setWeekShifts] = useState([]);
     const [deployments, setDeployments] = useState(initialDeployments);
     const { shiftConfigs } = useContext(ShiftConfigurationContext);
@@ -32,18 +34,28 @@ const Calender = (props) => {
 
     //generate week days array
     useEffect(() => {
-        (async () => {
-            let weekShifts = [];
-            let startOfWeek = moment(selectedDate).startOf('week');
-            for (let i = 0; i < 7; i++) {
-                weekShifts.push(
-                    moment(startOfWeek).add(i, 'days')
-                )
-            }
-            //fetch deployments
-            await fetchData();
-            setWeekShifts(weekShifts);
-        })();
+        //throttle data fetching from server
+        setSelectedDateThrottleTimeout(
+            clearTimeout(selectedDateThrottleTimeout)
+        );
+
+        setSelectedDateThrottleTimeout(
+            setTimeout(() => {
+                (async () => {
+                    let weekShifts = [];
+                    let startOfWeek = moment(selectedDate).startOf('week');
+                    for (let i = 0; i < 7; i++) {
+                        weekShifts.push(
+                            moment(startOfWeek).add(i, 'days')
+                        )
+                    }
+                    //fetch deployments
+                    await fetchData();
+                    setWeekShifts(weekShifts);
+                })();
+            }, 1000)
+        );
+
     }, [selectedDate]);
 
 
@@ -83,7 +95,7 @@ const Calender = (props) => {
             `${FETCH_DEPLOYMENTS}/?userId=${userData._id}&startDate=${startDate}&endDate=${endDate}`
         );
         if (deployments.status === 200) {
-            let newDeploymentsState = initialDeployments;
+            let newDeploymentsState = JSON.parse(JSON.stringify(initialDeployments));
 
             deployments.data.map(deploy => {
                 let diff = moment(endDate).diff(moment(deploy.deployDate), 'days');
@@ -93,10 +105,21 @@ const Calender = (props) => {
         }
     }
 
+    let isPast = moment(selectedDate).startOf('week').valueOf() < moment().startOf('week').valueOf();
+
     return (
         <div className="calender">
-            <CalenderHeader selectedDate={selectedDate} changeCalenderData={setSelectedDate} />
+            <CalenderHeader
+                selectedDate={selectedDate}
+                changeCalenderData={setSelectedDate}
+                isPast={isPast}
+            />
             <section className="calender__week">
+                {isPast ?
+                    <aside className="calender__week__past-curtain"></aside>
+                    :
+                    null
+                }
                 {weekShifts.map((day, dayIndex) =>
                     <div className="calender__week__day" key={moment(day).format('dddd, DD')}>
                         <header className="calender__week__header">
@@ -118,6 +141,7 @@ const Calender = (props) => {
                                     <Droppable
                                         droppableId={`${shift._id},${dayIndex},${shiftIndex}`}
                                         key={`${shift._id},${dayIndex},${shiftIndex}`}
+                                        isDropDisabled={isPast}
                                     >
                                         {(provided, snapshot) => (
                                             <div
@@ -137,7 +161,10 @@ const Calender = (props) => {
                                                                     {...provided.dragHandleProps}
                                                                     className={"employees-list__content__employee"}
                                                                 >
-                                                                    <h4>dsewewwddww</h4>
+                                                                    <div>
+                                                                        <h4>{deploy.employee.fullName}</h4>
+                                                                        <h4>{deploy.employee.title ? deploy.employee.title : null}</h4>
+                                                                    </div>
                                                                 </div>
                                                             )}
                                                         </Draggable>

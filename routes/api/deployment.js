@@ -33,31 +33,20 @@ router.post('/', [
                 return res.status(400).json({ errors: [{ param: '', msg: 'User not Found' }] });
             }
 
-            //search for deployment to update, if not found create new
-            // let deployment = await Deployment.findOne({ userId, deployDate, shiftId });
-            // if (deployment) {
-            //     deployment.employees.push(employee);
-            //     await Deployment.findByIdAndUpdate(deployment._id, deployment);
-            //     res.send({ status: 200, msg: 'sss' });
-            // } else {
-            //     let newDeployment = new Deployment({
-            //         userId,
-            //         deployDate,
-            //         shiftId,
-            //         employees: [employee]
-            //     });
-            //     await newDeployment.save();
-            //     res.send({ status: 200 });
-            // }
-
             let newDeployment = new Deployment({
                 userId,
                 deployDate,
                 shiftId,
                 employee
             });
+
             await newDeployment.save();
-            res.send({ status: 200, data: newDeployment });
+
+            //fetch employee data from deployment to send to the client
+
+            let employeeData = await Employee.findById({ _id: employee }).select(['-date', '-__v']);
+
+            res.send({ status: 200, data: { ...newDeployment.toObject(), employee: employeeData } });
 
         } catch (err) {
             console.log(err.message);
@@ -91,21 +80,6 @@ router.get('/getDeployments', [
             if (!user) {
                 return res.status(400).json({ errors: [{ param: '', msg: 'User not Found' }] });
             }
-            // //fetch all required deployments
-            // let deployments = await Deployment.find({ userId, deployDate: { "$gte": startDate, "$lt": endDate } }).select(['-date', '-__v']);
-            // //fetch all employees data from deployments to send to the client
-            // deployments = await Promise.all(deployments.map(async (deploy) => {
-
-            //     const promises = deploy.employees.map(async (_id) => {
-            //         let newEmployeeObject = await Employee.findById({ _id }).select(['-date', '-__v']);
-            //         return newEmployeeObject;
-            //     });
-
-            //     return {
-            //         ...deploy.toObject(),
-            //         employees: await Promise.all(promises)
-            //     }
-            // }));
 
             //fetch all required deployments
             let deployments = await Deployment.find({ userId, deployDate: { "$gte": startDate, "$lt": endDate } }).select(['-date', '-__v']);
@@ -118,6 +92,7 @@ router.get('/getDeployments', [
                     employee: await promise
                 }
             }));
+
             res.send({ status: 200, data: deployments });
         } catch (err) {
             console.log(err.message);

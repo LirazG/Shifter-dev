@@ -6,16 +6,18 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 //api
 import { generalGetRequest } from '../../../functions/api';
 //routes
-import { GET_EMPLOYEES } from '../../../config/routes';
+import { GET_EMPLOYEES, EMPLOYES_AUTO_COMPLETE, GET_EMPLOYEES_BY_NAME } from '../../../config/routes';
 //context
 import { UserDataContext } from '../../../contexts/UserDataContext';
-// general functions
-import { throttling } from '../../../functions/general';
 
 const Employees = (props) => {
 
     const [employees, setEmployees] = useState([]);
     const [allowFetching, setAllowFetching] = useState(true);
+    const [searchValue, setSearchValue] = useState('');
+    const [blurBlocker, setBlurBlocker] = useState(false);
+    const [autoCompleteTimeout, setAutoCompleteTimeout] = useState(null);
+    const [autoCompleteValues, setAutoCompleteValues] = useState(null);
     const [paginationData, setPaginationData] = useState({ skip: 0, limit: 20 });
 
     const { userData } = useContext(UserDataContext);
@@ -28,11 +30,17 @@ const Employees = (props) => {
     }, [paginationData.skip]);
 
     //data feting function
-    const fetchData = async () => {
+    const fetchData = async (refreshData = false) => {
         let employeesResponse = await generalGetRequest(
             `${GET_EMPLOYEES}/?userId=${userData._id}&skip=${paginationData.skip}&limit=${paginationData.limit}`
         );
         if (employeesResponse.status === 200) {
+            // prevent data duplication when search input deleted
+            if (refreshData) {
+                setEmployees(employeesResponse.data);
+                return;
+            }
+
             let newEmployeeList = [...employees, ...employeesResponse.data]
             setEmployees(newEmployeeList);
         }
@@ -54,15 +62,90 @@ const Employees = (props) => {
         }
     }
 
+    const autoComplete = async (e) => {
+        let searchQuery = e.target.value
+
+        //update value in state
+        setSearchValue(searchQuery);
+
+        //throttle data fetching from server
+        setAutoCompleteTimeout(
+            clearTimeout(autoCompleteTimeout)
+        );
+
+        if (!searchQuery) {
+            setAutoCompleteValues(null);
+            await fetchData(true);
+            return;
+        }
+
+        setAutoCompleteTimeout(
+            setTimeout(async () => {
+                let autoCompleteResponse = await generalGetRequest(EMPLOYES_AUTO_COMPLETE + `?userId=${userData._id}&searchQuery=${searchQuery}`);
+                if (autoCompleteResponse.status === 200)
+                    setAutoCompleteValues(autoCompleteResponse.data)
+            }, 500)
+        );
+    }
+
+    const searchEmployee = async (e) => {
+        //detect enter click
+        if (e.keyCode === 13 || e === 'click')
+            if (searchValue) {
+                let searchResponse = await generalGetRequest(GET_EMPLOYEES_BY_NAME + `?userId=${userData._id}&searchQuery=${searchValue}`);
+                if (searchResponse.status === 200) {
+                    setEmployees(searchResponse.data);
+                    setAutoCompleteValues(null);
+                }
+            }
+    }
+
+    const handleBlur = (e) => {
+        if (!blurBlocker)
+            setAutoCompleteValues(null);
+    }
+
     return (
         <div className="employees-list">
             <header className="employees-list__search">
-                <input type="text" placeholder="Search employee..." />
+                <input
+                    type="text"
+                    value={searchValue}
+                    placeholder="Search employee..."
+                    onChange={autoComplete}
+                    onKeyDown={searchEmployee}
+                    onBlur={handleBlur}
+                />
                 <figure>
                     <SvgIcon
                         component={SearchIcon}
                     />
                 </figure>
+
+                {autoCompleteValues ?
+                    <ul className="employees-list__search__auto-complete">
+                        {autoCompleteValues.length === 0 ?
+                            <div className="employees-list__search__auto-complete--no-results">No results</div>
+                            :
+                            null
+                        }
+
+                        {autoCompleteValues.length > 0 && autoCompleteValues.map(employee =>
+                            <li
+                                //employee name is always unique by default (Employee model Mongoose Schema)
+                                key={employee}
+                                onClick={searchEmployee.bind(null, 'click')}
+                                onMouseEnter={setBlurBlocker.bind(null, true)}
+                                onMouseLeave={setBlurBlocker.bind(null, false)}
+                            >
+                                {employee}
+                            </li>
+                        )}
+                    </ul>
+                    :
+                    null
+                }
+
             </header>
 
             <Droppable droppableId={'employee-list'} key={'employee-list'}>
@@ -111,7 +194,7 @@ const Employees = (props) => {
                     <span>Add employee</span>
                 </button>
             </footer>
-        </div>
+        </div >
     )
 }
 

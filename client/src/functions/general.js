@@ -1,6 +1,6 @@
 //throttling function
 
-export const throttling = (callback, limit, time, cbParamsObject) => {
+export const throttling = (callback, limit, time) => {
     // monitor the count
     var calledCount = 0;
 
@@ -13,7 +13,7 @@ export const throttling = (callback, limit, time, cbParamsObject) => {
         if (limit > calledCount) {
             /// increase the count
             calledCount++;
-            callback(cbParamsObject);
+            callback();
         }
         else console.log('not calling because the limit has exceeded');
     }

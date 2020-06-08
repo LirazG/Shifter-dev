@@ -57,7 +57,9 @@ code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",monospace;
 }
 
-
+ul {
+    list-style-type: none;
+}
 
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, 

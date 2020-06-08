@@ -83,3 +83,77 @@ router.get('/getEmployees', [
 });
 
 module.exports = router;
+
+
+// @route  GET api/employees/autoComplete
+// @desc   get employees name list for auto complete
+// @access Private
+
+router.get('/autoComplete', [
+    auth
+], async (req, res) => {
+
+    //check for errors
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { searchQuery, userId } = req.query;
+
+    try {
+        let user = await User.findOne({ _id: userId });
+        if (!user) {
+            return res.status(400).json({ errors: [{ param: '', msg: 'User not Found' }] });
+        }
+
+        let employees = await Employee.find({ userId, 'fullName': { $regex: `.*${searchQuery}.*`, '$options': 'i' } })
+            .limit(5)
+            .select(['-_id', 'fullName']);
+
+        employees = employees.map(employee => employee.fullName);
+
+        res.send({ status: 200, data: employees });
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).send('Server error');
+    }
+
+});
+
+
+// @route  GET api/employees/getByName
+// @desc   get employees list by name
+// @access Private
+
+router.get('/getByName', [
+    auth
+], async (req, res) => {
+
+    //check for errors
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { searchQuery, userId } = req.query;
+
+    try {
+        let user = await User.findOne({ _id: userId });
+        if (!user) {
+            return res.status(400).json({ errors: [{ param: '', msg: 'User not Found' }] });
+        }
+
+        let employees = await Employee.find({ userId, 'fullName': { $regex: `.*${searchQuery}.*`, '$options': 'i' } })
+            .select(['-date', '-__v']);
+        res.send({ status: 200, data: employees });
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).send('Server error');
+    }
+
+});
+
+module.exports = router;

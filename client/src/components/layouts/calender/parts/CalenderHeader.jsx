@@ -7,6 +7,7 @@ import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import TodayIcon from '@material-ui/icons/Today';
 
 const CalenderHeader = (props) => {
+
     return (
         <header className="calender__header">
             <div className="calender__header__section">
@@ -15,6 +16,8 @@ const CalenderHeader = (props) => {
                 <p>{moment(props.selectedDate).endOf('week').format('MMM DD')}</p>
                 <p>&nbsp;,&nbsp;</p>
                 <p>{moment(props.selectedDate).endOf('week').format('YYYY')}</p>
+                <p>&nbsp;&nbsp;</p>
+                <p>{props.isPast ? '(Past)' : null}</p>
             </div>
             <div className="calender__header__section">
                 <figure onClick={props.changeCalenderData.bind(this, moment(props.selectedDate).subtract(7, 'days'))}>

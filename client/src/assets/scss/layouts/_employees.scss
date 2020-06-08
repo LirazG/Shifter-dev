@@ -1,11 +1,9 @@
 .employees-list {
     height: 100%;
-    // width: calc(15% - 0.8rem);
     width: calc(11vw + 5.9rem);
     background-color: $color-white;
     border-radius: 5px;
     padding: 1.6rem;
-    //
     overflow: hidden;
     @include displayFlex(column, unset, center);
 
@@ -16,6 +14,7 @@
         border-radius: 2.5rem;
         margin-bottom:1.6rem;
         flex-shrink: 0;
+        position: relative;
         @include displayFlex(row, space-between, center);
 
         & > figure {
@@ -37,7 +36,43 @@
             margin: 0 1rem;
             font-size: 1.6rem;
         }
+
+        &__auto-complete {
+            position: absolute;
+            left:0;
+            top:calc(100% + 0.5rem);
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            background-color: $color-white;
+            box-shadow: $strong-shadow;
+            padding: 0.6rem;
+            @include displayFlex(column);
+
+            &--no-results {
+                height: 5rem;
+                font-size: 2rem;
+                text-align: center;
+                line-height: 1.2;
+                @include displayFlex(column, center,center);
+            }
+
+            & > li {
+                width: 100%;
+                height: 3rem;
+                cursor: pointer;
+                flex-shrink: 0;
+                border-radius: 5px;
+                padding-left:0.6rem;
+                @include displayFlex(row, flex-start, center);
+            }
+
+            & > li:hover {
+                background-color: lighten($color-primary, 5);
+            }
+        }
     }
+
 
     &__content {
         width: 100%;
