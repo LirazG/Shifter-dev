@@ -229,8 +229,7 @@ input[type=number] {
     margin: 8px;
     border: 8px solid #fff;
     border-radius: 50%;
-    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-    border-color: #fff transparent transparent transparent; }
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite; }
     .spinner-circle div:nth-child(1) {
       animation-delay: -0.45s; }
     .spinner-circle div:nth-child(2) {
@@ -796,8 +795,10 @@ input[type=number] {
       padding: 0 0.6rem;
       display: flex;
       flex-direction: row;
-      justify-content: flex-start;
+      justify-content: space-between;
       align-items: center; }
+      .employees-list__content__employee > svg {
+        font-size: 2.2rem; }
     .employees-list__content__employee:last-of-type {
       margin-bottom: 0; }
   .employees-list__footer {
@@ -923,6 +924,19 @@ input[type=number] {
       border: 1px solid #fff;
       background-color: #fff;
       opacity: 0.5; }
+    .calender__week__loader {
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 50;
+      border-radius: 5px;
+      background-color: rgba(255, 255, 255, 0.5);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center; }
     .calender__week__header {
       height: 4rem;
       background-color: #28b498;

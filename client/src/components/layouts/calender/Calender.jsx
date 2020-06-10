@@ -3,37 +3,32 @@ import moment from 'moment';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
+import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
 //context
 import { ShiftConfigurationContext } from '../../../contexts/ShiftConfigurationContext';
 import { UserDataContext } from '../../../contexts/UserDataContext';
 //components
 import CalenderHeader from './parts/CalenderHeader';
+import Spinner from '../../globals/spinners/Spinner';
 //functions
 import { generalPostRequest, generalGetRequest } from '../../../functions/api';
 import { throttling } from '../../../functions/general';
 //routes
-import { DEPLOY, FETCH_DEPLOYMENTS } from '../../../config/routes';
+import { DEPLOY, FETCH_DEPLOYMENTS, RE_DEPLOY } from '../../../config/routes';
 
-const initialDeployments = [
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-    [],
-];
+const initialDeployments = [[], [], [], [], [], [], []];
 
 const Calender = (props) => {
-    const [selectedDate, setSelectedDate] = useState(moment());
+    const selectedDate = props.selectedDate
     const [selectedDateThrottleTimeout, setSelectedDateThrottleTimeout] = useState(null);
     const [weekShifts, setWeekShifts] = useState([]);
-    const [deployments, setDeployments] = useState(initialDeployments);
+    const [loading, setLoading] = useState(false);
     const { shiftConfigs } = useContext(ShiftConfigurationContext);
     const { userData } = useContext(UserDataContext);
 
     //generate week days array
     useEffect(() => {
+        setLoading(true);
         //throttle data fetching from server
         setSelectedDateThrottleTimeout(
             clearTimeout(selectedDateThrottleTimeout)
@@ -51,43 +46,15 @@ const Calender = (props) => {
                     }
                     //fetch deployments
                     await fetchData();
+                    setLoading(false);
                     setWeekShifts(weekShifts);
                 })();
-            }, 1000)
+            }, 800)
         );
 
     }, [selectedDate]);
 
-
-    //ondrag action functionallity
-    useEffect(() => {
-        (async () => {
-            if (props.dndAction) {
-                //use data passed by droppable id to set employee into place in deployments state
-                // dndChangesData[0] - shift.id,
-                // dndChangesData[1] - day Index ,
-                // dndChangesData[2] - shift index
-                let dndChangesData = props.dndAction.destination.droppableId.split(',');
-                let shiftId = dndChangesData[0];
-                let dayIndex = dndChangesData[1];
-                let shiftIndex = dndChangesData[2];
-                //send deployment to server
-                let body = {
-                    userId: userData._id,
-                    deployDate: moment(selectedDate).add(dayIndex, 'days').toISOString(),
-                    employee: props.dndAction.draggableId,
-                    shiftId
-                }
-                let newDeploy = await generalPostRequest(DEPLOY, body);
-                let newDeploymentsState = JSON.parse(JSON.stringify(deployments));
-
-                newDeploymentsState[dayIndex].push(newDeploy.data);
-                setDeployments(newDeploymentsState);
-            }
-        })();
-    }, [props.dndAction]);
-
-
+    //get deployments from server
     const fetchData = async () => {
         let startDate = moment(selectedDate).startOf('day').toISOString();
         let endDate = moment(selectedDate).add(7, 'days').startOf('day').toISOString();
@@ -101,22 +68,30 @@ const Calender = (props) => {
                 let diff = moment(endDate).diff(moment(deploy.deployDate), 'days');
                 newDeploymentsState[6 - diff].push(deploy)
             });
-            setDeployments(newDeploymentsState);
+            props.setDeployments(newDeploymentsState);
         }
     }
 
+    //determine if date in past
     let isPast = moment(selectedDate).startOf('week').valueOf() < moment().startOf('week').valueOf();
 
     return (
         <div className="calender">
             <CalenderHeader
                 selectedDate={selectedDate}
-                changeCalenderData={setSelectedDate}
+                changeCalenderData={props.setSelectedDate}
                 isPast={isPast}
             />
             <section className="calender__week">
                 {isPast ?
                     <aside className="calender__week__past-curtain"></aside>
+                    :
+                    null
+                }
+                {loading ?
+                    <aside className="calender__week__loader">
+                        <Spinner size={80} color={'#28b498'} />
+                    </aside>
                     :
                     null
                 }
@@ -150,10 +125,10 @@ const Calender = (props) => {
                                                 className="calender__droppable"
                                             >
                                                 {/* get data per day according to index in weekdays array */}
-                                                {deployments[dayIndex].map((deploy, deployIndex) =>
+                                                {props.deployments[dayIndex].map((deploy, deployIndex) =>
                                                     // render only if in same shift
                                                     deploy.shiftId === shift._id ?
-                                                        <Draggable draggableId={deploy._id} index={deployIndex} key={deploy._id}>
+                                                        <Draggable hi={'ddd'} draggableId={deploy._id} index={deployIndex} key={deploy._id}>
                                                             {(provided, snapshot) => (
                                                                 <div
                                                                     ref={provided.innerRef}
@@ -165,6 +140,9 @@ const Calender = (props) => {
                                                                         <h4>{deploy.employee.fullName}</h4>
                                                                         <h4>{deploy.employee.title ? deploy.employee.title : null}</h4>
                                                                     </div>
+                                                                    <SvgIcon
+                                                                        component={DragIndicatorIcon}
+                                                                    />
                                                                 </div>
                                                             )}
                                                         </Draggable>
@@ -185,4 +163,4 @@ const Calender = (props) => {
     )
 }
 
-export default Calender
+export default Calender;

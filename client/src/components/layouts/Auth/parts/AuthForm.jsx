@@ -1,9 +1,13 @@
-import React, { useState, useContext } from 'react';
+import React, { Fragment, useState, useContext } from 'react';
 import Cookies from 'js-cookie';
+//components
 import CustomInput from '../../../globals/formComponents/CustomInput';
+import Spinner from '../../../globals/spinners/Spinner';
+//api and configs
 import { generalPostRequest } from '../../../../functions/api';
 import { AUTH_COOKIE } from '../../../../config/keys';
 import { AUTH_ROUTES_REGISTER, AUTH_ROUTES_LOGIN } from '../../../../config/routes';
+//context and reducers
 import { UserDataContext } from '../../../../contexts/UserDataContext';
 import { FETCH_USER_DATA } from '../../../../reducers/userDataReducer';
 
@@ -62,6 +66,8 @@ const AuthForm = (props) => {
     const [registerFormErrors, setRegisterFormErrors] = useState(null);
     const [loginFormErrors, setLoginFormErrors] = useState(null);
 
+    const [loading, setLoading] = useState(false);
+
     const registerChangeHandler = (name, value) => {
         setRegisterFormData({ ...registerFormData, [name]: value });
     };
@@ -72,6 +78,7 @@ const AuthForm = (props) => {
 
     const authFormSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         // check if login / register form is active
         if (!props.authState) {
             //register
@@ -81,6 +88,7 @@ const AuthForm = (props) => {
                 let errors = {}
                 registerRes.data.errors.map(err => { errors[err.param] = err.msg })
                 setRegisterFormErrors(errors);
+                setLoading(false);
                 return;
             } else {
                 setRegisterFormErrors(null);
@@ -97,6 +105,7 @@ const AuthForm = (props) => {
                 let errors = {};
                 loginRes.data.errors.map(err => { errors[err.param] = err.msg });
                 setLoginFormErrors(errors);
+                setLoading(false);
                 return;
             } else {
                 setLoginFormErrors(null);
@@ -106,6 +115,7 @@ const AuthForm = (props) => {
             userDataDispatch({ type: FETCH_USER_DATA, payload: loginRes.userData });
         }
 
+        setLoading(false);
     }
 
     const demoLogin = async () => {
@@ -134,8 +144,16 @@ const AuthForm = (props) => {
                         </p>
                     </div>
                 )}
-
-                <button><span>sign up</span></button>
+                <button>
+                    {loading ?
+                        <Fragment>
+                            <Spinner size={40} />
+                            <span>signing up...</span>
+                        </Fragment>
+                        :
+                        <span>sign up</span>
+                    }
+                </button>
             </div>
 
             <div className={props.authState ? "auth-page__form__wrapper auth-page__form__wrapper--active" : "auth-page__form__wrapper"}>
@@ -153,7 +171,16 @@ const AuthForm = (props) => {
                     </div>
                 )}
 
-                <button><span>sign in</span></button>
+                <button>
+                    {loading ?
+                        <Fragment>
+                            <Spinner size={40} />
+                            <span>signing in...</span>
+                        </Fragment>
+                        :
+                        <span>sign in</span>
+                    }
+                </button>
 
                 <p className="auth-page__form__wrapper__demo-login" onClick={demoLogin}>Take a tour with demo user here!</p>
             </div>

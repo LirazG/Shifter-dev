@@ -15,5 +15,7 @@ export const GET_EMPLOYEES_BY_NAME = `${API_URL}/api/employees/getByName`;
 //deployment
 export const DEPLOY = `${API_URL}/api/deployment`;
 export const FETCH_DEPLOYMENTS = `${API_URL}/api/deployment/getDeployments`;
+export const RE_DEPLOY = `${API_URL}/api/deployment/redeploy`;
+
 
 

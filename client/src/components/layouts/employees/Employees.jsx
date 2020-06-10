@@ -3,6 +3,9 @@ import { Draggable, Droppable } from 'react-beautiful-dnd';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import SearchIcon from '@material-ui/icons/Search';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
+//components
+import Spinner from '../../globals/spinners/Spinner';
 //api
 import { generalGetRequest } from '../../../functions/api';
 //routes
@@ -11,7 +14,7 @@ import { GET_EMPLOYEES, EMPLOYES_AUTO_COMPLETE, GET_EMPLOYEES_BY_NAME } from '..
 import { UserDataContext } from '../../../contexts/UserDataContext';
 
 const Employees = (props) => {
-
+    //state
     const [employees, setEmployees] = useState([]);
     const [allowFetching, setAllowFetching] = useState(true);
     const [searchValue, setSearchValue] = useState('');
@@ -19,18 +22,31 @@ const Employees = (props) => {
     const [autoCompleteTimeout, setAutoCompleteTimeout] = useState(null);
     const [autoCompleteValues, setAutoCompleteValues] = useState(null);
     const [paginationData, setPaginationData] = useState({ skip: 0, limit: 20 });
-
+    const [loading, setLoading] = useState(false);
+    const [blockApi, setBlockApi] = useState(false);
+    //contexts
     const { userData } = useContext(UserDataContext);
 
-    //fetch employees data on mount
+    //fetch employees data
     useEffect(() => {
         (async () => {
             await fetchData();
         })();
     }, [paginationData.skip]);
 
-    //data feting function
+    //fetch employees data on mount
+    useEffect(() => {
+        props.setDraggedEmployee(employees[props.draggedEmployeeIndex])
+    }, [props.draggedEmployeeIndex]);
+
+    //get employees list from server
     const fetchData = async (refreshData = false) => {
+
+        // block api calls if all employees fetched already
+        if (blockApi && !refreshData)
+            return;
+
+        setLoading(true);
         let employeesResponse = await generalGetRequest(
             `${GET_EMPLOYEES}/?userId=${userData._id}&skip=${paginationData.skip}&limit=${paginationData.limit}`
         );
@@ -38,12 +54,20 @@ const Employees = (props) => {
             // prevent data duplication when search input deleted
             if (refreshData) {
                 setEmployees(employeesResponse.data);
+                setLoading(false);
+                setBlockApi(false);
                 return;
             }
+
+            // set blocker of api calls if all employees fetched already
+            if (employeesResponse.data.length === 0)
+                setBlockApi(true);
 
             let newEmployeeList = [...employees, ...employeesResponse.data]
             setEmployees(newEmployeeList);
         }
+
+        setLoading(false);
     }
 
     //scroll handler fetching more employees on scroll
@@ -58,7 +82,7 @@ const Employees = (props) => {
 
         if (allowFetching && scrolledToOffset) {
             setAllowFetching(false);
-            setPaginationData({ ...paginationData, skip: (paginationData.skip + 1) * paginationData.limit });
+            setPaginationData({ ...paginationData, skip: paginationData.skip + paginationData.limit });
         }
     }
 
@@ -73,17 +97,23 @@ const Employees = (props) => {
             clearTimeout(autoCompleteTimeout)
         );
 
+        //reset all search params and fetch data accordingly if user cleared search
         if (!searchQuery) {
             setAutoCompleteValues(null);
+            setBlockApi(false);
+            setPaginationData({ skip: 0, limit: 20 })
             await fetchData(true);
             return;
         }
 
         setAutoCompleteTimeout(
             setTimeout(async () => {
+                setLoading(true);
                 let autoCompleteResponse = await generalGetRequest(EMPLOYES_AUTO_COMPLETE + `?userId=${userData._id}&searchQuery=${searchQuery}`);
-                if (autoCompleteResponse.status === 200)
+                if (autoCompleteResponse.status === 200) {
                     setAutoCompleteValues(autoCompleteResponse.data)
+                    setLoading(false);
+                }
             }, 500)
         );
     }
@@ -117,9 +147,12 @@ const Employees = (props) => {
                     onBlur={handleBlur}
                 />
                 <figure>
-                    <SvgIcon
-                        component={SearchIcon}
-                    />
+                    {loading ?
+                        <Spinner size={40} />
+                        :
+                        <SvgIcon component={SearchIcon} />
+                    }
+
                 </figure>
 
                 {autoCompleteValues ?
@@ -170,6 +203,10 @@ const Employees = (props) => {
                                                 <h4>{employee.fullName}</h4>
                                                 <h4>{employee.title ? employee.title : null}</h4>
                                             </div>
+                                            <SvgIcon
+                                                component={DragIndicatorIcon}
+                                            />
+
                                         </div>
                                     )}
                                 </Draggable>

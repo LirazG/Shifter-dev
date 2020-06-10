@@ -43,7 +43,6 @@ router.post('/', [
             await newDeployment.save();
 
             //fetch employee data from deployment to send to the client
-
             let employeeData = await Employee.findById({ _id: employee }).select(['-date', '-__v']);
 
             res.send({ status: 200, data: { ...newDeployment.toObject(), employee: employeeData } });
@@ -55,8 +54,8 @@ router.post('/', [
     });
 
 
-// @route  GET api/deployment
-// @desc   Create/update deployments of employees
+// @route  GET api/deployment/getDeployments
+// @desc   Create deployments of employees
 // @access Private
 
 router.get('/getDeployments', [
@@ -94,6 +93,44 @@ router.get('/getDeployments', [
             }));
 
             res.send({ status: 200, data: deployments });
+        } catch (err) {
+            console.log(err.message);
+            res.status(500).send('Server error');
+        }
+    });
+
+
+// @route  POST api/deployment/redeploy
+// @desc   Update deployments of employees
+// @access Private
+
+router.post('/redeploy', [
+    auth,
+    check('_id', 'Missing id of deployment').not().isEmpty(),
+    check('deployDate', 'Missing new deploy date').not().isEmpty(),
+    check('shiftId', 'Missing shift Id').not().isEmpty()
+],
+    async (req, res) => {
+        //check for errors
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        const { _id, deployDate, shiftId } = req.body;
+
+        //See if deployment exists
+        try {
+            let deployment = await Deployment.findByIdAndUpdate(_id, { shiftId, deployDate });
+
+            if (!deployment) {
+                return res.status(400).json({ errors: [{ param: '', msg: 'deployment not Found' }] });
+            }
+
+            //fetch employee data from deployment to send to the client
+            let employeeData = await Employee.findById({ _id: deployment.employee }).select(['-date', '-__v']);
+            res.send({ status: 200, data: { ...deployment.toObject(), employee: employeeData } });
+
         } catch (err) {
             console.log(err.message);
             res.status(500).send('Server error');
