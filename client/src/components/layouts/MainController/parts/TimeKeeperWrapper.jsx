@@ -8,6 +8,7 @@ import { useOutsideClick } from '../../../../functions/customHooks';
 const TimeKeeperWrapper = (props) => {
 
     const [activeTimeKeeper, setActiveTimeKeeper] = useState(false);
+    const [timekeeperValue, setTimekeeperValue] = useState({ name: props.name, value: props.value });
     const timekeeper = useRef();
 
     useOutsideClick(timekeeper, (e) => {
@@ -20,22 +21,27 @@ const TimeKeeperWrapper = (props) => {
         });
     }
 
-    const handleTimeChange = (name, time) => {
-        props.onChange(name, time);
+    const handleTimeChange = (name, value) => {
+        setTimekeeperValue({ name, value });
+    }
+
+    const handleDoneClick = () => {
+        props.onChange(timekeeperValue.name, timekeeperValue.value);
+        setActiveTimeKeeper(false);
     }
 
     return (
         <span ref={timekeeper} className="shifts__wrapper__group__timekeeper--wrapper">
-            <button id="time1" onClick={toggleTimeKeeper}>
+            <button id="time1" type="button" onClick={toggleTimeKeeper}>
                 Set Time
                 <SvgIcon component={ScheduleIcon} />
             </button>
             {activeTimeKeeper ?
                 <div className="shifts__wrapper__group__timekeeper" >
                     <Timekeeper
-                        time={props.value}
-                        onChange={(newTime) => handleTimeChange(props.name, newTime.formatted24)}
-                        onDoneClick={() => setActiveTimeKeeper(false)}
+                        time={timekeeperValue.value}
+                        onChange={(newTime) => handleTimeChange(timekeeperValue.name, newTime.formatted24)}
+                        onDoneClick={handleDoneClick}
                         hour24Mode
                         switchToMinuteOnHourSelect
                     />
@@ -47,4 +53,4 @@ const TimeKeeperWrapper = (props) => {
     )
 }
 
-export default TimeKeeperWrapper
+export default TimeKeeperWrapper;

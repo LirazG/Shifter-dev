@@ -1,9 +1,9 @@
-import React, { Fragment, useState, useEffect, useRef, useContext } from 'react';
+import React, { Fragment, useState, useContext } from 'react';
+import moment from 'moment';
 import { withStyles } from '@material-ui/core/styles';
 import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
 import MuiExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import MuiExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import Typography from '@material-ui/core/Typography';
 import SvgIcon from '@material-ui/core/SvgIcon';
 //components
 import TimeKeeperWrapper from './TimeKeeperWrapper';
@@ -19,9 +19,9 @@ import { SET_SHIFTS } from '../../../../reducers/shiftConfigurationReducer';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 //api
-import { generalGetRequest, generalPostRequest } from '../../../../functions/api';
+import { generalPostRequest } from '../../../../functions/api';
 //routes
-import { FETCH_SHIFTS, UPDATE_SHIFTS } from '../../../../config/routes';
+import { UPDATE_SHIFTS } from '../../../../config/routes';
 
 const ExpansionPanel = withStyles({
     root: {
@@ -65,9 +65,12 @@ const ExpansionPanelDetails = withStyles((theme) => ({
     },
 }))(MuiExpansionPanelDetails);
 
+
+
 const ShiftSettingsForm = (props) => {
     const { userData } = useContext(UserDataContext);
     const { shiftConfigs, shiftConfigsDispatch } = useContext(ShiftConfigurationContext);
+    const [shiftConfigsLocalState, setShiftConfigsLocalState] = useState(shiftConfigs.map(shift => shift));
 
     const [expanded, setExpanded] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -77,9 +80,9 @@ const ShiftSettingsForm = (props) => {
     };
 
     const addShift = () => {
-        if (shiftConfigs.length >= 4)
+        if (shiftConfigsLocalState.length >= 4)
             return
-        let newShifts = shiftConfigs.map(shift => shift);
+        let newShifts = shiftConfigsLocalState.map(shift => shift);
         newShifts.push(
             {
                 name: `New Shift ${newShifts.length + 1}`,
@@ -88,15 +91,33 @@ const ShiftSettingsForm = (props) => {
                 numberOfEmployees: null
             }
         );
-        shiftConfigsDispatch({ type: SET_SHIFTS, payload: newShifts });
+        setShiftConfigsLocalState(newShifts);
+    }
+
+    const handleShiftChange = (index, name, value) => {
+        //check if start hour is after end hour and if it is set endHour and startHour to the same hour
+        let startHour = shiftConfigsLocalState[index].startHour;
+        if (Date.parse(`01/01/2011 ${startHour}:00`) > Date.parse(`01/01/2011 ${value}:00`)) {
+            value = startHour;
+        }
+
+        let newShifts = shiftConfigsLocalState.map(shift => shift);
+        newShifts[index][name] = value;
+        setShiftConfigsLocalState(newShifts);
+    }
+
+    const deleteShift = (indexToDelete) => {
+        let newShifts = shiftConfigsLocalState.filter((shift, shiftIndex) => shiftIndex !== indexToDelete);
+        setShiftConfigsLocalState(newShifts);
     }
 
     const submit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        let newShifts = await generalPostRequest(UPDATE_SHIFTS, { userId: userData._id, shifts: shiftConfigs }, 'put');
+        let newShifts = await generalPostRequest(UPDATE_SHIFTS, { userId: userData._id, shifts: shiftConfigsLocalState }, 'put');
         if (newShifts.status === 200) {
-            shiftConfigsDispatch({ type: SET_SHIFTS, payload: newShifts.data })
+            setShiftConfigsLocalState(newShifts.data);
+            shiftConfigsDispatch({ type: SET_SHIFTS, payload: newShifts.data });
             setLoading(false);
         } else {
             alert(JSON.stringify(newShifts.data.errors.map(err => err.msg)))
@@ -104,20 +125,23 @@ const ShiftSettingsForm = (props) => {
         }
     }
 
-    const handleShiftChange = (index, name, value) => {
-        let newShifts = shiftConfigs.map(shift => shift);
-        newShifts[index][name] = value;
-        shiftConfigsDispatch({ type: SET_SHIFTS, payload: newShifts });
-    }
-
     return (
         <form className="main-controller__settings--form" onSubmit={submit}>
             <h1>Daily shift arrangement</h1>
             <div className="main-controller__settings--form__shifts">
-                {shiftConfigs.map((shift, shiftIndex) =>
-                    <ExpansionPanel square expanded={expanded === `panel${shiftIndex}`} onChange={handleActiveMenu(`panel${shiftIndex}`)}>
+                {shiftConfigsLocalState && shiftConfigsLocalState.map((shift, shiftIndex) =>
+                    <ExpansionPanel
+                        key={shift._id || shift.name}
+                        square
+                        expanded={expanded === `panel${shiftIndex}`}
+                        onChange={handleActiveMenu(`panel${shiftIndex}`)}
+                    >
                         <ExpansionPanelSummary aria-controls={`panel${shiftIndex}d-content`} id={`panel${shiftIndex}d-header`}>
-                            <ShiftHeader name={shift.name} />
+                            <ShiftHeader
+                                name={shift.name}
+                                shiftIndex={shiftIndex}
+                                deleteShift={deleteShift}
+                            />
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
                             <div className="shifts__wrapper">
@@ -186,12 +210,15 @@ const ShiftSettingsForm = (props) => {
                 )}
             </div>
 
-            <span className="main-controller__settings--form__add-shift" onClick={addShift}>
-                <p>Add shift</p>
+            <span
+                className="main-controller__settings--form__add-shift"
+                onClick={addShift}
+                style={shiftConfigsLocalState.length >= 4 ? { display: 'none' } : {}}
+            >
+                <p>Add shift (maximum 4)</p>
                 <SvgIcon
                     component={AddIcon}
                 />
-
             </span>
 
             <button type="submit" style={loading ? { pointerEvents: 'none', opacity: '0.6' } : {}}>
@@ -204,7 +231,7 @@ const ShiftSettingsForm = (props) => {
                     </Fragment>
                 }
             </button>
-        </form>
+        </form >
     )
 }
 

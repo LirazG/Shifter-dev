@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import moment from 'moment';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import SvgIcon from '@material-ui/core/SvgIcon';
@@ -9,17 +9,17 @@ import { ShiftConfigurationContext } from '../../../contexts/ShiftConfigurationC
 import { UserDataContext } from '../../../contexts/UserDataContext';
 //components
 import CalenderHeader from './parts/CalenderHeader';
+import ShiftHeader from './parts/ShiftHeader';
 import Spinner from '../../globals/spinners/Spinner';
 //functions
-import { generalPostRequest, generalGetRequest } from '../../../functions/api';
-import { throttling } from '../../../functions/general';
+import { generalGetRequest } from '../../../functions/api';
 //routes
-import { DEPLOY, FETCH_DEPLOYMENTS, RE_DEPLOY } from '../../../config/routes';
+import { FETCH_DEPLOYMENTS } from '../../../config/routes';
 
 const initialDeployments = [[], [], [], [], [], [], []];
 
 const Calender = (props) => {
-    const selectedDate = props.selectedDate
+    const selectedDate = props.selectedDate;
     const [selectedDateThrottleTimeout, setSelectedDateThrottleTimeout] = useState(null);
     const [weekShifts, setWeekShifts] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -83,7 +83,7 @@ const Calender = (props) => {
                 isPast={isPast}
             />
             <section className="calender__week">
-                {isPast ?
+                {isPast && !loading ?
                     <aside className="calender__week__past-curtain"></aside>
                     :
                     null
@@ -107,12 +107,7 @@ const Calender = (props) => {
                                     style={{ height: `calc((100% - 4rem) / ${shiftConfigs.length})` }}
                                     key={shift._id}
                                 >
-                                    <header>
-                                        <p>{shift.name}</p>
-                                        <SvgIcon
-                                            component={InfoOutlinedIcon}
-                                        />
-                                    </header>
+                                    <ShiftHeader {...{ ...shift, totalShiftsNumber: shiftConfigs.length }} />
                                     <Droppable
                                         droppableId={`${shift._id},${dayIndex},${shiftIndex}`}
                                         key={`${shift._id},${dayIndex},${shiftIndex}`}
@@ -128,7 +123,7 @@ const Calender = (props) => {
                                                 {props.deployments[dayIndex].map((deploy, deployIndex) =>
                                                     // render only if in same shift
                                                     deploy.shiftId === shift._id ?
-                                                        <Draggable hi={'ddd'} draggableId={deploy._id} index={deployIndex} key={deploy._id}>
+                                                        <Draggable draggableId={deploy._id} key={deploy._id} index={deployIndex}>
                                                             {(provided, snapshot) => (
                                                                 <div
                                                                     ref={provided.innerRef}
@@ -163,4 +158,4 @@ const Calender = (props) => {
     )
 }
 
-export default Calender;
+export default React.memo(Calender);

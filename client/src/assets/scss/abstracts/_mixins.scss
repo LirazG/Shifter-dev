@@ -93,6 +93,17 @@
     }
     &::-webkit-resizer { 
         background-color: #666;
+    }   
+}
+
+@mixin mediaMaxHeight($height){
+    @media screen and (max-height: $height) {
+        @content;
     }
-    
+}
+
+@mixin mediaMaxWidth($width){
+    @media screen and (max-width: $width) {
+        @content;
+    }
 }

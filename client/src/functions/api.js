@@ -2,7 +2,7 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
 //configs
-import { API_URL, AUTH_COOKIE } from '../config/keys'
+import { AUTH_COOKIE } from '../config/keys'
 
 export const generalPostRequest = async (url, body = {}, method = 'post') => {
     const headers = {

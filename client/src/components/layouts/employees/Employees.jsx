@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, Fragment } from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import SearchIcon from '@material-ui/icons/Search';
+import ClearIcon from '@material-ui/icons/Clear';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
 //components
@@ -24,14 +25,14 @@ const Employees = (props) => {
     const [paginationData, setPaginationData] = useState({ skip: 0, limit: 20 });
     const [loading, setLoading] = useState(false);
     const [blockApi, setBlockApi] = useState(false);
+    const [searchResetButton, setSearchResetButton] = useState(false);
+
     //contexts
     const { userData } = useContext(UserDataContext);
 
     //fetch employees data
     useEffect(() => {
-        (async () => {
-            await fetchData();
-        })();
+        fetchData(paginationData.skip === 0);
     }, [paginationData.skip]);
 
     //fetch employees data on mount
@@ -56,6 +57,7 @@ const Employees = (props) => {
                 setEmployees(employeesResponse.data);
                 setLoading(false);
                 setBlockApi(false);
+                setSearchResetButton(false);
                 return;
             }
 
@@ -101,8 +103,6 @@ const Employees = (props) => {
         if (!searchQuery) {
             setAutoCompleteValues(null);
             setBlockApi(false);
-            setPaginationData({ skip: 0, limit: 20 })
-            await fetchData(true);
             return;
         }
 
@@ -126,6 +126,7 @@ const Employees = (props) => {
                 if (searchResponse.status === 200) {
                     setEmployees(searchResponse.data);
                     setAutoCompleteValues(null);
+                    setSearchResetButton(true);
                 }
             }
     }
@@ -133,6 +134,14 @@ const Employees = (props) => {
     const handleBlur = (e) => {
         if (!blurBlocker)
             setAutoCompleteValues(null);
+    }
+
+    const resetSearch = () => {
+        // reset all search params
+        setPaginationData({ skip: 0, limit: 20 });
+        setSearchResetButton(false);
+        setSearchValue('');
+        fetchData(true);
     }
 
     return (
@@ -150,7 +159,14 @@ const Employees = (props) => {
                     {loading ?
                         <Spinner size={40} />
                         :
-                        <SvgIcon component={SearchIcon} />
+                        searchResetButton ?
+                            <SvgIcon
+                                component={ClearIcon}
+                                style={{ cursor: 'pointer' }}
+                                onClick={resetSearch}
+                            />
+                            :
+                            <SvgIcon component={SearchIcon} />
                     }
 
                 </figure>
@@ -235,4 +251,4 @@ const Employees = (props) => {
     )
 }
 
-export default Employees;
+export default React.memo(Employees);

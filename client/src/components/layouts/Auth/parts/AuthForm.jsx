@@ -58,7 +58,7 @@ const initialLoginData = {
 
 
 const AuthForm = (props) => {
-    const { userData, userDataDispatch } = useContext(UserDataContext);
+    const { userDataDispatch } = useContext(UserDataContext);
 
     const [registerFormData, setRegisterFormData] = useState(initialRegisterData);
     const [loginFormData, setLoginFormData] = useState(initialLoginData);

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { DragDropContext } from 'react-beautiful-dnd';
 import moment from 'moment';
+import { DragDropContext } from 'react-beautiful-dnd';
+import { v4 as uuidv4 } from 'uuid';
 //context
 import { ShiftConfigurationContext } from '../../../contexts/ShiftConfigurationContext';
 import { UserDataContext } from '../../../contexts/UserDataContext';
@@ -27,7 +28,7 @@ const MainController = () => {
     const [draggedEmployee, setDraggedEmployee] = useState(null);
     const [draggedEmployeeIndex, setDraggedEmployeeIndex] = useState(null);
     //contexts
-    const { shiftConfigsDispatch } = useContext(ShiftConfigurationContext);
+    const { shiftConfigs, shiftConfigsDispatch } = useContext(ShiftConfigurationContext);
     const { userData } = useContext(UserDataContext);
 
     //fetch shifts configs on mount
@@ -39,13 +40,15 @@ const MainController = () => {
         })();
     }, []);
 
-    //save dragged employee to state for setting its data to the deployment object when drag ends
+    //save dragged employee to state for setting its data to the deployment object when drag ends (only from employee list)
     const onDragStart = (dndAction) => {
-        setDraggedEmployeeIndex(dndAction.source.index)
+        if (dndAction.source.droppableId === 'employee-list')
+            setDraggedEmployeeIndex(dndAction.source.index)
     }
 
     //handle user drag am employee to shift in calender
     const onDragEnd = (dndAction) => {
+
         // blocks unnecessary use cases for error prevention
         if (!dndAction.destination || !dndAction.source || dndAction.destination.droppableId === 'employee-list')
             return;
@@ -58,7 +61,15 @@ const MainController = () => {
 
         let destinationShiftId = destinationData[0];
         let destinationDayIndex = destinationData[1];
+        let destinationShiftIndex = destinationData[2];
         let sourceDayIndex = sourceData[1];
+
+        // block drop if shift is already full
+        let numberOfEmployeesAlowed = shiftConfigs[destinationShiftIndex].numberOfEmployees
+        if (numberOfEmployeesAlowed && (numberOfEmployeesAlowed < deployments[destinationDayIndex].length)) {
+            alert('Maximum number of employees reached for this shift');
+            return;
+        }
 
         //select all employee ids on the same shift for comparison
         let employeesIdsArray = deployments[destinationDayIndex].filter(deployment => deployment.shiftId === destinationShiftId)
@@ -101,6 +112,8 @@ const MainController = () => {
 
         //prepare body object for api call - send deployment to server
         let body = {
+            //generate unique id for new instence of deploy object yet initialized in server
+            _id: uuidv4(),
             userId: userData._id,
             deployDate: moment(selectedDate).add(dayIndex, 'days').toISOString(),
             employee: dndAction.draggableId,
@@ -141,9 +154,12 @@ const MainController = () => {
 
         //update removed deploy shiftId according to drag
         newDeploymentsState[oldDayIndex][oldIndexInDay].shiftId = newShiftId;
-        // remove deploy object from old place and put it the new place in state
-        newDeploymentsState[newDayIndex].splice(newIndexInDay, 0, newDeploymentsState[oldDayIndex][oldIndexInDay]);
-        newDeploymentsState[oldDayIndex].splice(oldIndexInDay, 1);
+        // remove deploy object from old place and put it the new place in state - if same day only change shiftId
+        if (oldDayIndex !== newDayIndex) {
+            newDeploymentsState[newDayIndex].splice(newIndexInDay, 0, newDeploymentsState[oldDayIndex][oldIndexInDay]);
+            newDeploymentsState[oldDayIndex].splice(oldIndexInDay, 1);
+        }
+
         setDeployments(newDeploymentsState);
 
         //prepare body object for api - send new deployment to server
@@ -193,8 +209,8 @@ const MainController = () => {
                 <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
                     <Calender
                         deployments={deployments}
-                        setDeployments={setDeployments}
                         selectedDate={selectedDate}
+                        setDeployments={setDeployments}
                         setSelectedDate={setSelectedDate}
                     />
                     <Employees
@@ -208,4 +224,4 @@ const MainController = () => {
     )
 }
 
-export default MainController;
+export default React.memo(MainController);

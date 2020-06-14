@@ -185,7 +185,7 @@ input[type=number] {
     width: 100%;
     background-color: rgba(0, 0, 0, 0.5); }
   .custom-modal__content {
-    height: 80%;
+    height: 68rem;
     width: 100%;
     max-width: 50rem;
     background-color: #fff;
@@ -556,16 +556,24 @@ input[type=number] {
       justify-content: space-between;
       align-items: center; }
     .main-controller__settings--form__add-shift > svg {
-      font-size: 2.5rem; }
+      font-size: 2.2rem; }
 
-.shifts__header {
+.settings-shifts__header {
   width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center; }
-  .shifts__header > svg {
+  .settings-shifts__header > svg {
     font-size: 2rem; }
+  .settings-shifts__header__row {
+    display: flex;
+    flex-direction: row;
+    justify-content: unset;
+    align-items: center; }
+    .settings-shifts__header__row > svg {
+      font-size: 2.5rem;
+      margin-left: 1rem; }
 
 .shifts__wrapper {
   width: 100%; }
@@ -647,7 +655,7 @@ input[type=number] {
       justify-content: center;
       align-items: center; }
     .shifts__wrapper__group__timekeeper--wrapper > button:hover {
-      background-color: #46b3c2; }
+      background-color: n(#3ba5b4, 5); }
     .shifts__wrapper__group__timekeeper--wrapper > button:active {
       background-color: #3ba5b4;
       transform: scale(0.95);
@@ -664,7 +672,7 @@ input[type=number] {
 
 .employees-list {
   height: 100%;
-  width: calc(11vw + 5.9rem);
+  width: 16%;
   background-color: #fff;
   border-radius: 5px;
   padding: 1.6rem;
@@ -704,7 +712,7 @@ input[type=number] {
       flex-grow: 1;
       height: calc(100% - 1rem);
       margin: 0 1rem;
-      font-size: 1.6rem; }
+      font-size: 1.5rem; }
     .employees-list__search__auto-complete {
       position: absolute;
       left: 0;
@@ -743,12 +751,13 @@ input[type=number] {
         background-color: #2dc9aa; }
   .employees-list__content {
     width: 100%;
+    width: calc(( ((100vw - 3.2rem) * 0.84) / 7) + 0.8rem);
     flex-grow: 1;
     border-radius: 10px;
-    padding: 1rem;
+    padding: 1rem 0 1rem 1.2rem;
     border: 1px solid #808080;
     background-color: #fff;
-    overflow-y: auto; }
+    overflow-y: scroll; }
     .employees-list__content::-webkit-scrollbar {
       width: 14px; }
     .employees-list__content::-webkit-scrollbar-track {
@@ -848,7 +857,7 @@ input[type=number] {
 
 .calender {
   height: 100%;
-  width: calc(89vw - 10.7rem);
+  width: calc(84% - 1.6rem);
   background-color: #fff;
   border-radius: 5px;
   padding: 1.6rem; }
@@ -961,20 +970,83 @@ input[type=number] {
       justify-content: flex-start;
       align-items: space-between; }
     .calender__week__shifts__container {
-      width: 100%; }
-    .calender__week__shifts__container > header {
+      width: 100%;
+      position: relative; }
+    .calender__week .shifts-header {
       width: 100%;
       height: 2.5rem;
       background-color: #d3d3d2;
-      color: black;
+      color: #000;
       display: flex;
       flex-direction: row;
       justify-content: center;
       align-items: center; }
-    .calender__week__shifts__container > header > svg {
+    .calender__week .shifts-header > svg {
       font-size: 2rem;
       margin-left: 0.5rem;
       cursor: pointer; }
+    .calender__week .shifts-header__tooltip {
+      width: 100%;
+      height: calc(100% - 2.5rem);
+      background-color: #b9efe4;
+      position: absolute;
+      top: 2.5rem;
+      left: 0;
+      transform-origin: top;
+      transform: scaleY(0);
+      transition: transform .2s; }
+    .calender__week .shifts-header__tooltip--active {
+      transform: scaleY(1);
+      transition: transform .2s; }
+    .calender__week .shifts-header__tooltip__content {
+      height: 100%;
+      width: 100%;
+      padding: 1rem 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center; }
+    .calender__week .shifts-header__tooltip__content > section {
+      width: 100%;
+      margin-bottom: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center; }
+    @media screen and (max-height: 900px) {
+      .calender__week .shifts-header__tooltip__content__icon--hide {
+        display: none; } }
+    .calender__week .shifts-header__tooltip__content > section > svg {
+      font-size: 2.5rem;
+      align-self: center;
+      margin-bottom: 0.6rem; }
+    .calender__week .shifts-header__tooltip__content > section > p {
+      width: 100%;
+      max-width: 11.5rem;
+      font-size: 1.6rem;
+      margin-bottom: 0.6rem;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center; }
   .calender__droppable {
     height: calc(100% - 2.5rem);
-    padding: 0.6rem; }
+    padding: 0.6rem;
+    overflow-y: auto;
+    overflow-x: hidden; }
+    .calender__droppable::-webkit-scrollbar {
+      width: 14px; }
+    .calender__droppable::-webkit-scrollbar-track {
+      background-color: transparent;
+      border-radius: 15px; }
+    .calender__droppable::-webkit-scrollbar-track-piece {
+      display: none; }
+    .calender__droppable::-webkit-scrollbar-thumb {
+      height: 50px;
+      background-color: #28b498;
+      border-radius: 10px;
+      border: 3px solid white; }
+    .calender__droppable::-webkit-scrollbar-corner {
+      background-color: #646464; }
+    .calender__droppable::-webkit-resizer {
+      background-color: #666; }

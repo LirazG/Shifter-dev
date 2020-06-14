@@ -68,7 +68,7 @@
        }
 
        &--form__add-shift > svg {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
        }
     }
    
@@ -76,12 +76,21 @@
 
 // 
 
-.shifts__header {
+.settings-shifts__header {
     width: 100%;
     @include displayFlex(row, space-between,center);
 
     & > svg {
         font-size: 2rem;
+    }
+
+    &__row {
+        @include displayFlex(row,unset,center);
+
+        & > svg {
+            font-size: 2.5rem;
+            margin-left: 1rem;
+        }
     }
 }
 
@@ -171,7 +180,7 @@
         }
 
         & > button:hover {
-            background-color: lighten($color-secondary, 5);
+            background-color: n($color-secondary, 5);
         }
 
         & > button:active {

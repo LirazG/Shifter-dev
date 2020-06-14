@@ -5,6 +5,7 @@ const { check, validationResult } = require('express-validator');
 // models
 const User = require('../../models/User');
 const Shift = require('../../models/Shift');
+const Deployment = require('../../models/Deployment');
 
 // @route  GET api/shifts/getShiftsForUser
 // @desc   Fetch all shifts for user route
@@ -72,6 +73,22 @@ router.put('/updateShifts', [
             if (!user) {
                 return res.status(400).json({ errors: [{ param: '', msg: 'User not Found' }] });
             }
+
+            // //delete shifts that didnt came back from client (means the client deleted it)
+            let shiftsToDelete = Shift.find({ userId });
+            let shiftIdsFromClient = shifts.map(shift => shift._id ? shift._id.toString() : null);
+            let shiftIdsForUser = await Promise.resolve(shiftsToDelete);
+            shiftIdsForUser = shiftIdsForUser.map(shift => shift._id);
+
+            await shiftIdsForUser.map(shift => shift._id).map(async (_id) => {
+                if (!shiftIdsFromClient.includes(_id.toString())) {
+                    await Shift.findByIdAndDelete({ _id });
+                    let deploymentsToDelete = await Deployment.find({ shiftId: _id }).select('_id');
+                    deploymentsToDelete.map(deploy => {
+                        Promise.resolve(Deployment.findByIdAndDelete({ _id: deploy._id }))
+                    });
+                }
+            });
 
             Promise.all(shifts.map(async (shift) => {
                 if (shift._id) {

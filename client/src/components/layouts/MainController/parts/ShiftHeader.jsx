@@ -1,27 +1,46 @@
 import React, { useState } from 'react';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
+import ClearIcon from '@material-ui/icons/Clear';
+import CheckIcon from '@material-ui/icons/Check';
 
 const ShiftHeader = (props) => {
     const [deleteMode, setDeleteMode] = useState(false);
+
+    const handleDeleteClick = (e) => {
+        setDeleteMode(true);
+        e.stopPropagation();
+    }
+
+    const handleClearClick = (e) => {
+        setDeleteMode(false);
+        e.stopPropagation();
+    }
+
+    const handleDelete = (e) => {
+        props.deleteShift(props.shiftIndex);
+        e.stopPropagation();
+    }
+
     return (
-        <header className="shifts__header">
+        <header className="settings-shifts__header">
             <p>{props.name}</p>
             {deleteMode ?
-                <span>
-                    <p>Delete shift ?</p>
+                <span className="settings-shifts__header__row">
+                    <p>Delete shift ? (all data will be lost)</p>
                     <SvgIcon
-                        component={DeleteOutlineIcon}
+                        component={CheckIcon}
+                        onClick={(e) => { handleDelete(e) }}
                     />
                     <SvgIcon
-                        component={DeleteOutlineIcon}
+                        component={ClearIcon}
+                        onClick={(e) => { handleClearClick(e) }}
                     />
                 </span>
-
                 :
                 <SvgIcon
                     component={DeleteOutlineIcon}
-                    onClick={(e) => { setDeleteMode(true); e.stopPropagation(); }}
+                    onClick={(e) => { handleDeleteClick(e) }}
                 />
             }
 

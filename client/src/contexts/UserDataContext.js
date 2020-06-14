@@ -1,9 +1,6 @@
 //dependencies
-import React, { createContext, useReducer, useEffect, useContext } from 'react';
-import Cookies from 'js-cookie';
+import React, { createContext, useReducer, useEffect } from 'react';
 import { userDataReducer } from '../reducers/userDataReducer';
-//keys
-import { AUTH_COOKIE } from '../config/keys';
 //functions 
 import { generalGetRequest } from '../functions/api';
 //routes

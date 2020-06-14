@@ -11,7 +11,8 @@
     "react-beautiful-dnd": "^13.0.0",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
-    "react-timekeeper": "^2.1.1"
+    "react-timekeeper": "^2.1.1",
+    "uuid": "^8.1.0"
   },
   "scripts": {
     "start": "react-scripts start",

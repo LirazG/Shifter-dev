@@ -1,16 +1,9 @@
 //dependencies
-import React, { useEffect, useState, useContext, useReducer, createContext } from 'react';
-import Cookies from 'js-cookie';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 //components
 import Auth from './components/layouts/Auth/Auth';
 import MainController from './components/layouts/MainController/MainController';
-//keys
-import { AUTH_COOKIE } from './config/keys';
-//routes
-import { VALIDATE_USER } from './config/routes';
-//api
-import { generalGetRequest } from './functions/api';
 //context 
 import UserDataContextProvider, { UserDataContext } from './contexts/UserDataContext';
 import ShiftConfigurationContext from './contexts/ShiftConfigurationContext';
