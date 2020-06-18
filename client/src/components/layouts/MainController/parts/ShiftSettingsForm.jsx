@@ -1,5 +1,6 @@
 import React, { Fragment, useState, useContext } from 'react';
 import moment from 'moment';
+import { v4 as uuidv4 } from 'uuid';
 import { withStyles } from '@material-ui/core/styles';
 import MuiExpansionPanel from '@material-ui/core/ExpansionPanel';
 import MuiExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -85,6 +86,7 @@ const ShiftSettingsForm = (props) => {
         let newShifts = shiftConfigsLocalState.map(shift => shift);
         newShifts.push(
             {
+                temporaryId: uuidv4(),
                 name: `New Shift ${newShifts.length + 1}`,
                 startTime: '',
                 endTime: '',
@@ -95,11 +97,9 @@ const ShiftSettingsForm = (props) => {
     }
 
     const handleShiftChange = (index, name, value) => {
-        //check if start hour is after end hour and if it is set endHour and startHour to the same hour
-        let startHour = shiftConfigsLocalState[index].startHour;
-        if (Date.parse(`01/01/2011 ${startHour}:00`) > Date.parse(`01/01/2011 ${value}:00`)) {
-            value = startHour;
-        }
+        //set default time if user opened timekeeper and did not change the hour but clicked on done
+        if ((name === 'startHour' || name === 'endHour') && !value)
+            value = '12:30'
 
         let newShifts = shiftConfigsLocalState.map(shift => shift);
         newShifts[index][name] = value;
@@ -131,7 +131,7 @@ const ShiftSettingsForm = (props) => {
             <div className="main-controller__settings--form__shifts">
                 {shiftConfigsLocalState && shiftConfigsLocalState.map((shift, shiftIndex) =>
                     <ExpansionPanel
-                        key={shift._id || shift.name}
+                        key={shift._id || shift.temporaryId}
                         square
                         expanded={expanded === `panel${shiftIndex}`}
                         onChange={handleActiveMenu(`panel${shiftIndex}`)}

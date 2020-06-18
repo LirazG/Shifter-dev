@@ -32,7 +32,7 @@ const TimeKeeperWrapper = (props) => {
 
     return (
         <span ref={timekeeper} className="shifts__wrapper__group__timekeeper--wrapper">
-            <button id="time1" type="button" onClick={toggleTimeKeeper}>
+            <button type="button" onClick={toggleTimeKeeper}>
                 Set Time
                 <SvgIcon component={ScheduleIcon} />
             </button>

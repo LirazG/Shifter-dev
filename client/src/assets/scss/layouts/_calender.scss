@@ -4,6 +4,11 @@
     background-color: $color-white;
     border-radius: 5px;
     padding:1.6rem;
+    @include mediaMaxWidth($tablet) {
+        width: 100%;
+        height: calc(100vh - 11.2rem);
+        flex-shrink: 0;
+    }
 
     &__header {
         width: 100%;
@@ -69,6 +74,10 @@
         border-radius: 5px;
         position: relative;
         @include displayFlex(row);
+        @include mediaMaxWidth($tablet) {
+            overflow-x: scroll;
+            overflow-y: hidden;
+        }
 
         &__past-curtain {
             height: calc(100% + 2px);
@@ -102,12 +111,19 @@
             font-weight: bold;
             width: 100%;
             @include displayFlex(column,center,center);
+            @include mediaMaxWidth($laptop-small) {
+                font-size: 1.5rem;
+            }
         }
 
         &__day {
             width: calc(100% / 7);
             height: 100%;
             border-right: 1px solid $color-gray;
+            @include mediaMaxWidth($tablet) {
+                width: calc(25% + 0.5px);
+                flex-shrink: 0;
+            }
         }
 
         &__day:last-of-type {
@@ -129,8 +145,10 @@
             height: 2.5rem;
             background-color: $color-light-gray;
             color:$color-black;
-           
             @include displayFlex(row,center,center);
+            @include mediaMaxWidth($laptop-small) {
+                font-size: 1.5rem;
+            }
         }
 
         & .shifts-header > svg {
@@ -161,6 +179,9 @@
             width:100%;
             padding: 1rem 0;
             @include displayFlex(column,center,center);
+            @include mediaMaxWidth($laptop-small) {
+                padding: 1rem 0.5rem;
+            }
         }
 
         & .shifts-header__tooltip__content > section {
@@ -183,10 +204,13 @@
 
         & .shifts-header__tooltip__content > section > p {
             width: 100%;
-            max-width: 11.5rem;
+            max-width: 12rem;
             font-size: 1.6rem;
             margin-bottom: 0.6rem;
             @include displayFlex(row,space-between,center);
+            @include mediaMaxWidth($laptop-small) {
+                font-size: 1.4rem;
+            }
         }
 
     }

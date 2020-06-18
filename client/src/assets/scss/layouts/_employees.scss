@@ -6,6 +6,12 @@
     padding: 1.6rem;
     overflow: hidden;
     @include displayFlex(column, unset, center);
+    @include mediaMaxWidth($tablet) {
+        width: 100%;
+        height: calc(100vh - 11.2rem);
+        flex-shrink: 0;
+        margin-top: 3.6rem;
+    }
 
     &__search {
         width: 100%;
@@ -17,24 +23,38 @@
         position: relative;
         @include displayFlex(row, space-between, center);
 
+        // @include mediaMaxWidth($laptop-small){
+        //     height: 4rem;
+        //     margin-bottom:2.6rem;
+        // }
+
         & > figure {
             margin-right: 0.4rem;
             flex-shrink: 0;
             @include circle(4rem, $color-primary);
             @include displayFlex(row, center, center);
+            // @include mediaMaxWidth($laptop-small){
+            //     @include circle(3rem, $color-primary);
+            // }
         }
 
         & > figure> svg {
             font-size: 3rem;
             color: $color-white;
+            // @include mediaMaxWidth($laptop-small){
+            //     font-size: 2.2rem;
+            // }
         }
 
         & > input {
-            max-width: calc(100% - 7rem);
+            max-width: calc(100% - 6rem);
             flex-grow: 1;
             height: calc(100% - 1rem);
-            margin: 0 1rem;
+            margin-left: 1rem;
             font-size: 1.5rem;
+            // @include mediaMaxWidth($laptop-small){
+            //     max-width: calc(100% - 5rem);
+            // }
         }
 
         &__auto-complete {
@@ -75,8 +95,6 @@
 
 
     &__content {
-        width: 100%;
-        //100% = ((100vw - 3.2rem) * 0.16) - 3.2rem
         width: calc(( ((100vw - 3.2rem) * 0.84) / 7) + 0.8rem );
         flex-grow: 1;
         border-radius: 10px;
@@ -85,6 +103,16 @@
         background-color: $color-white;
         overflow-y: scroll;
         @include customScrollbar($color-white, $color-primary);
+        @include mediaMaxWidth($tablet){
+            width: 100%;
+        }
+
+        & > div {
+            @include mediaMaxWidth($tablet){
+                @include displayFlex(row,flex-start,center);
+                flex-wrap: wrap;
+            }
+        }
 
         &--empty {
             @include displayFlex(column,center,center);
@@ -107,25 +135,6 @@
             line-height: 1.15;
         }
 
-        &__employee {
-            width: 100%;
-            height: 4rem;
-            border-radius: 5px;
-            margin-bottom: 1rem;
-            background-color: $color-primary-hover;
-            color: $color-white;
-            font-size: 1.4rem;
-            padding: 0 0.6rem;
-            @include displayFlex(row, space-between, center);
-
-            & > svg {
-                font-size: 2.2rem;
-            }
-        }
-
-        &__employee:last-of-type {
-            margin-bottom: 0;
-        }
     }
 
     &__footer {
@@ -139,4 +148,47 @@
             @include button($color-white, $color-primary, $color-white, $color-primary-hover, none);
         }
     }
+}
+
+
+.employees-draggable {
+    width: 100%;
+    height: 4rem;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    background-color: $color-primary-hover;
+    color: $color-white;
+    font-size: 1.4rem;
+    padding: 0 0.6rem;
+    @include displayFlex(row, space-between, center);
+
+    &--list {
+        @include mediaMaxWidth($tablet){
+            width: calc(25% - 0.6rem);
+            margin-right: 0.8rem;
+
+            &:nth-of-type(4n){
+                margin-right: 0;
+            }
+        }
+    }
+
+    & > svg {
+        font-size: 2.2rem;
+    }
+
+    & > div {
+        max-width: calc(100% - 2.2rem);
+    }
+
+    & > div > h4 {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        @include mediaMaxWidth($laptop-small) {
+            font-size: 1.25rem;
+            line-height: 1.2;
+        }
+    }
+
 }

@@ -15,14 +15,16 @@ import { GET_EMPLOYEES, EMPLOYES_AUTO_COMPLETE, GET_EMPLOYEES_BY_NAME } from '..
 import { UserDataContext } from '../../../contexts/UserDataContext';
 
 const Employees = (props) => {
+    //CONSTANTS
+    const EMPLOYEE_LIST_ELEMENT = document.getElementsByClassName("employees-list__content")[0] || '';
+    const INITIAL_PAGINATION_LIMIT = 20;
     //state
     const [employees, setEmployees] = useState([]);
-    const [allowFetching, setAllowFetching] = useState(true);
     const [searchValue, setSearchValue] = useState('');
     const [blurBlocker, setBlurBlocker] = useState(false);
     const [autoCompleteTimeout, setAutoCompleteTimeout] = useState(null);
     const [autoCompleteValues, setAutoCompleteValues] = useState(null);
-    const [paginationData, setPaginationData] = useState({ skip: 0, limit: 20 });
+    const [paginationData, setPaginationData] = useState({ skip: null, limit: INITIAL_PAGINATION_LIMIT });
     const [loading, setLoading] = useState(false);
     const [blockApi, setBlockApi] = useState(false);
     const [searchResetButton, setSearchResetButton] = useState(false);
@@ -32,58 +34,57 @@ const Employees = (props) => {
 
     //fetch employees data
     useEffect(() => {
-        fetchData(paginationData.skip === 0);
+        if (paginationData.skip || paginationData.skip === 0)
+            fetchData();
     }, [paginationData.skip]);
 
-    //fetch employees data on mount
+    useEffect(() => {
+        // increment limit if element is too big for scrolling (so more data could be fetched and won't persist on initial results)
+        let hasVerticalScrollbar = EMPLOYEE_LIST_ELEMENT.scrollHeight > EMPLOYEE_LIST_ELEMENT.clientHeight;
+        if (!hasVerticalScrollbar && !searchResetButton) {
+            if (employees.length === 0) {
+                setPaginationData({ ...paginationData, skip: 0 });
+            } else {
+                setPaginationData({ ...paginationData, skip: paginationData.skip + paginationData.limit });
+            }
+
+        }
+    }, [employees.length, searchResetButton]);
+
+    //set dragged employee in parent component
     useEffect(() => {
         props.setDraggedEmployee(employees[props.draggedEmployeeIndex])
     }, [props.draggedEmployeeIndex]);
 
     //get employees list from server
-    const fetchData = async (refreshData = false) => {
-
-        // block api calls if all employees fetched already
-        if (blockApi && !refreshData)
+    const fetchData = async () => {
+        // block api calls if all employees from DB are fetched already
+        if (blockApi)
             return;
 
         setLoading(true);
+
         let employeesResponse = await generalGetRequest(
             `${GET_EMPLOYEES}/?userId=${userData._id}&skip=${paginationData.skip}&limit=${paginationData.limit}`
         );
         if (employeesResponse.status === 200) {
-            // prevent data duplication when search input deleted
-            if (refreshData) {
-                setEmployees(employeesResponse.data);
-                setLoading(false);
-                setBlockApi(false);
-                setSearchResetButton(false);
-                return;
-            }
-
             // set blocker of api calls if all employees fetched already
             if (employeesResponse.data.length === 0)
                 setBlockApi(true);
 
-            let newEmployeeList = [...employees, ...employeesResponse.data]
+            let newEmployeeList = [...employees, ...employeesResponse.data];
             setEmployees(newEmployeeList);
         }
-
+        //set loader false
         setLoading(false);
     }
 
     //scroll handler fetching more employees on scroll
     const handleListScroll = () => {
-        let scrolledDiv = document.getElementsByClassName("employees-list__content")[0];
         //calc scroll bottom for more data fetching (number 2 is 1 px border top and bottom, 100 is px offset for data fetch)
-        let scrolledToOffset = scrolledDiv.scrollTop >= (scrolledDiv.scrollHeight - scrolledDiv.offsetHeight + 2) - 100;
+        let scrolledToOffset = EMPLOYEE_LIST_ELEMENT.scrollTop >= (EMPLOYEE_LIST_ELEMENT.scrollHeight - EMPLOYEE_LIST_ELEMENT.offsetHeight + 2) - 100;
 
-        if (!scrolledToOffset) {
-            setAllowFetching(true);
-        }
-
-        if (allowFetching && scrolledToOffset) {
-            setAllowFetching(false);
+        if (scrolledToOffset) {
             setPaginationData({ ...paginationData, skip: paginationData.skip + paginationData.limit });
         }
     }
@@ -120,15 +121,17 @@ const Employees = (props) => {
 
     const searchEmployee = async (e) => {
         //detect enter click
-        if (e.keyCode === 13 || e === 'click')
-            if (searchValue) {
-                let searchResponse = await generalGetRequest(GET_EMPLOYEES_BY_NAME + `?userId=${userData._id}&searchQuery=${searchValue}`);
-                if (searchResponse.status === 200) {
-                    setEmployees(searchResponse.data);
-                    setAutoCompleteValues(null);
-                    setSearchResetButton(true);
-                }
+        if ((e.keyCode === 13 || e === 'click') && searchValue) {
+            //scroll to top when searching to prevent possible bugs of data fetching
+            EMPLOYEE_LIST_ELEMENT.scrollTop = 0;
+            //generate search data
+            let searchResponse = await generalGetRequest(GET_EMPLOYEES_BY_NAME + `?userId=${userData._id}&searchQuery=${searchValue}`);
+            if (searchResponse.status === 200) {
+                setSearchResetButton(true);
+                setEmployees(searchResponse.data);
+                setAutoCompleteValues(null);
             }
+        }
     }
 
     const handleBlur = (e) => {
@@ -138,10 +141,11 @@ const Employees = (props) => {
 
     const resetSearch = () => {
         // reset all search params
-        setPaginationData({ skip: 0, limit: 20 });
+        setEmployees([]);
+        setLoading(true);
         setSearchResetButton(false);
+        setPaginationData({ skip: 0, limit: INITIAL_PAGINATION_LIMIT });
         setSearchValue('');
-        fetchData(true);
     }
 
     return (
@@ -150,7 +154,7 @@ const Employees = (props) => {
                 <input
                     type="text"
                     value={searchValue}
-                    placeholder="Search employee..."
+                    placeholder="Employee name"
                     onChange={autoComplete}
                     onKeyDown={searchEmployee}
                     onBlur={handleBlur}
@@ -174,7 +178,11 @@ const Employees = (props) => {
                 {autoCompleteValues ?
                     <ul className="employees-list__search__auto-complete">
                         {autoCompleteValues.length === 0 ?
-                            <div className="employees-list__search__auto-complete--no-results">No results</div>
+                            <div
+                                className="employees-list__search__auto-complete--no-results"
+                                onMouseEnter={setBlurBlocker.bind(null, true)}
+                                onMouseLeave={setBlurBlocker.bind(null, false)}
+                            >No results</div>
                             :
                             null
                         }
@@ -213,7 +221,7 @@ const Employees = (props) => {
                                             ref={provided.innerRef}
                                             {...provided.draggableProps}
                                             {...provided.dragHandleProps}
-                                            className={"employees-list__content__employee"}
+                                            className={"employees-draggable employees-draggable--list"}
                                         >
                                             <div>
                                                 <h4>{employee.fullName}</h4>
@@ -227,7 +235,7 @@ const Employees = (props) => {
                                     )}
                                 </Draggable>
                             )}
-                            {employees.length === 0 ?
+                            {employees.length === 0 && !loading ?
                                 <Fragment>
                                     <SvgIcon
                                         component={PersonAddIcon}

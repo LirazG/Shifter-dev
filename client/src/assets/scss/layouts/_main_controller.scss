@@ -4,12 +4,21 @@
     overflow: hidden;
     position: relative;
     background-image: $gradient-primary;
+    @include mediaMaxWidth($tablet) {
+        height: unset;
+        width: 100%;
+    }
 
    &__content {
        width:100%;
        height: calc(100% - 6rem);
        padding: 1.6rem;
        @include displayFlex(row, space-between, center);
+       @include mediaMaxWidth($tablet) {
+           height: calc(200vh - 7.6rem);
+           padding-top: 7.6rem;
+           @include displayFlex(column, space-between, center);
+       }
    }
 
    &__settings {
@@ -71,7 +80,45 @@
             font-size: 2.2rem;
        }
     }
+
+    & &__mobile-scroll {
+        display: none;
+
+        &:last-of-type {
+            bottom: calc(50% - 6.65rem);
+        }
+
+        &--hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @include mediaMaxWidth($tablet) {
+            display: inline;
+            opacity: 1;
+            cursor: pointer;
+            font-size: 6rem;
+            position: absolute;
+            bottom: calc(50% - 4.50rem);
+            color: $color-white;
+            animation: floatVertical 2s linear 1s infinite;
+        }
+    }
    
+}
+
+@keyframes floatVertical {
+    25% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(7px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
 }
 
 // 
@@ -198,12 +245,7 @@
 
     &__group__timekeeper {
         position: absolute;
-        top:calc(100% + 1rem);
-        left:50%;
-        transform: translateX(-50%);
         z-index: 10;
     }
-
-
 
 }

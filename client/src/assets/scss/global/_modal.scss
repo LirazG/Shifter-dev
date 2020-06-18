@@ -6,6 +6,9 @@
     width: 100vw;
     z-index: 100;
     display: none;
+    @include mediaMaxWidth($tablet) {
+        z-index: 101;
+    }
 
     &--active {
        animation-name: activeModal;

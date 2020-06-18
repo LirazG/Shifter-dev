@@ -129,7 +129,7 @@ const Calender = (props) => {
                                                                     ref={provided.innerRef}
                                                                     {...provided.draggableProps}
                                                                     {...provided.dragHandleProps}
-                                                                    className={"employees-list__content__employee"}
+                                                                    className={"employees-draggable employees-draggable--calender"}
                                                                 >
                                                                     <div>
                                                                         <h4>{deploy.employee.fullName}</h4>

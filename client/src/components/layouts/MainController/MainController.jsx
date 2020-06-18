@@ -1,7 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import moment from 'moment';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { v4 as uuidv4 } from 'uuid';
+//icons
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 //context
 import { ShiftConfigurationContext } from '../../../contexts/ShiftConfigurationContext';
 import { UserDataContext } from '../../../contexts/UserDataContext';
@@ -18,10 +21,13 @@ import Employees from '../../layouts/employees/Employees';
 import CustomModal from '../../globals/modal/CustomModal';
 import AddEmployeeForm from './parts/AddEmployeeForm';
 import ShiftSettingsForm from './parts/ShiftSettingsForm';
+import SvgIcon from '@material-ui/icons/KeyboardArrowDown';
+//functions
+import { smoothScroll } from '../../../functions/general';
 
 const MainController = () => {
-
     //state
+    const [scrollPosition, setScrollPosition] = useState(null);
     const [activeModal, setActiveModal] = useState(false);
     const [deployments, setDeployments] = useState([]);
     const [selectedDate, setSelectedDate] = useState(moment());
@@ -38,7 +44,47 @@ const MainController = () => {
             if (shifts.status === 200)
                 shiftConfigsDispatch({ type: SET_SHIFTS, payload: shifts.data });
         })();
+
+        checkScrollPosition();
+        //check scroll position in smaller screens (laptop app doesn't have scroll anyway)
+        document.addEventListener('scroll', checkScrollPosition);
+        return () => {
+            document.removeEventListener('scroll', checkScrollPosition);
+        }
+
     }, []);
+
+    // cancel scroll when modal opens
+    useEffect(() => {
+        if (activeModal) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+    }, [activeModal]);
+
+    //handle scroll function
+    const checkScrollPosition = useCallback(() => {
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 40) {
+            setScrollPosition('bottom');
+        }
+        if (window.scrollY <= 40) {
+            setScrollPosition('top');
+        }
+    }, []);
+
+    //handle arrows click
+    const handleArrowsClick = (offset) => {
+        document.removeEventListener('scroll', checkScrollPosition);
+        smoothScroll(null, offset);
+        // remove scroll event when scrolling with arrow buttons to improve performance 
+        // (600 is the scrolling duration defined in smooth scroll function in general.js file)
+        setTimeout(() => {
+            document.addEventListener('scroll', checkScrollPosition);
+            checkScrollPosition();
+        }, 600);
+    }
+
 
     //save dragged employee to state for setting its data to the deployment object when drag ends (only from employee list)
     const onDragStart = (dndAction) => {
@@ -65,8 +111,9 @@ const MainController = () => {
         let sourceDayIndex = sourceData[1];
 
         // block drop if shift is already full
-        let numberOfEmployeesAlowed = shiftConfigs[destinationShiftIndex].numberOfEmployees
-        if (numberOfEmployeesAlowed && (numberOfEmployeesAlowed < deployments[destinationDayIndex].length)) {
+        let numberOfEmployeesAlowed = shiftConfigs[destinationShiftIndex].numberOfEmployees;
+        let shiftEmployees = deployments[destinationDayIndex].filter(deployment => deployment.shiftId === shiftConfigs[destinationShiftIndex]._id)
+        if (numberOfEmployeesAlowed && (numberOfEmployeesAlowed < shiftEmployees.length + 1)) {
             alert('Maximum number of employees reached for this shift');
             return;
         }
@@ -212,6 +259,25 @@ const MainController = () => {
                         selectedDate={selectedDate}
                         setDeployments={setDeployments}
                         setSelectedDate={setSelectedDate}
+                    />
+                    <SvgIcon
+                        component={KeyboardArrowDownIcon}
+                        className={scrollPosition === 'top' ?
+                            "main-controller__mobile-scroll"
+                            :
+                            "main-controller__mobile-scroll--hidden"
+                        }
+                        onClick={handleArrowsClick.bind(null, document.body.scrollHeight - window.innerHeight)}
+                    />
+                    <SvgIcon
+                        component={KeyboardArrowUpIcon}
+                        className={
+                            scrollPosition === 'bottom' ?
+                                "main-controller__mobile-scroll"
+                                :
+                                "main-controller__mobile-scroll--hidden"
+                        }
+                        onClick={handleArrowsClick.bind(null, 0)}
                     />
                     <Employees
                         openAddEmployeeModal={setActiveModal.bind(null, 'addEmployee')}
