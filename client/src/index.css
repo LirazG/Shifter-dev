@@ -117,6 +117,9 @@ input[type=number] {
   flex-direction: row;
   justify-content: space-between;
   align-items: center; }
+  @media screen and (max-width: 500px) {
+    .custom-input {
+      height: 4.2rem; } }
   .custom-input > input,
   .custom-input > input::placeholder {
     height: 100%;
@@ -189,6 +192,9 @@ input[type=number] {
     animation-name: activeModalContent;
     animation-duration: 0.4s;
     animation-fill-mode: forwards; }
+    @media screen and (max-width: 500px) {
+      .custom-modal--active .custom-modal__content {
+        animation-name: activeModalContentMobile; } }
   .custom-modal__curtain {
     height: 100%;
     width: 100%;
@@ -204,6 +210,15 @@ input[type=number] {
     left: 50%;
     border-top: 10px solid #28b498;
     transform: translate3d(-50%, -10%, 0); }
+    @media screen and (max-width: 500px) {
+      .custom-modal__content {
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+        transform: translate3d(0, -10%, 0);
+        border: none;
+        border-radius: 0; } }
     .custom-modal .custom-modal__content__close-icon {
       position: absolute;
       top: 2rem;
@@ -211,6 +226,10 @@ input[type=number] {
       cursor: pointer;
       font-size: 2.5rem;
       z-index: 20; }
+      @media screen and (max-width: 500px) {
+        .custom-modal .custom-modal__content__close-icon {
+          top: 1rem;
+          right: 1rem; } }
 
 @keyframes activeModal {
   0% {
@@ -223,6 +242,12 @@ input[type=number] {
     transform: translate3d(-50%, -10%, 0); }
   100% {
     transform: translate3d(-50%, 0, 0); } }
+
+@keyframes activeModalContentMobile {
+  0% {
+    transform: translate3d(0, -10%, 0); }
+  100% {
+    transform: translate3d(0, 0, 0); } }
 
 .spinner-circle {
   display: inline-block;
@@ -265,6 +290,9 @@ input[type=number] {
       flex-direction: column;
       justify-content: unset;
       align-items: unset; } }
+  @media screen and (max-width: 500px) {
+    .auth-page {
+      min-height: fit-content; } }
   .auth-page__flipper {
     background-image: linear-gradient(253deg, #3ba5b4 0, #38ba8a 100%);
     color: #fff;
@@ -281,6 +309,14 @@ input[type=number] {
       .auth-page__flipper {
         width: 100%;
         padding: 3rem 0; } }
+    @media screen and (max-width: 500px) {
+      .auth-page__flipper {
+        height: 30vh;
+        padding: 2rem 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center; } }
     .auth-page__flipper__shape {
       position: absolute;
       z-index: 0; }
@@ -293,6 +329,15 @@ input[type=number] {
         border-style: solid;
         border-width: 0 10rem 16rem 10rem;
         border-color: transparent transparent rgba(255, 255, 255, 0.1) transparent; }
+        @media screen and (max-width: 1020px) {
+          .auth-page__flipper__shape:nth-of-type(1) {
+            bottom: 10%;
+            left: unset;
+            right: 0; } }
+        @media screen and (max-width: 500px) {
+          .auth-page__flipper__shape:nth-of-type(1) {
+            transform: rotate(40deg) scale(0.7);
+            right: -10%; } }
       .auth-page__flipper__shape:nth-of-type(2) {
         top: 10%;
         left: -10%;
@@ -300,6 +345,9 @@ input[type=number] {
         height: 25rem;
         border-radius: 50%;
         background-color: rgba(255, 255, 255, 0.1); }
+        @media screen and (max-width: 500px) {
+          .auth-page__flipper__shape:nth-of-type(2) {
+            transform: scale(0.7); } }
       .auth-page__flipper__shape:nth-of-type(3) {
         top: 55%;
         left: -20%;
@@ -307,6 +355,13 @@ input[type=number] {
         width: 20rem;
         height: 10rem;
         background-color: rgba(255, 255, 255, 0.1); }
+        @media screen and (max-width: 1020px) {
+          .auth-page__flipper__shape:nth-of-type(3) {
+            top: 15%;
+            left: 30%; } }
+        @media screen and (max-width: 500px) {
+          .auth-page__flipper__shape:nth-of-type(3) {
+            display: none; } }
     .auth-page__flipper__main-text {
       display: flex;
       flex-direction: column;
@@ -318,6 +373,9 @@ input[type=number] {
       @media screen and (max-width: 1020px) {
         .auth-page__flipper__main-text {
           height: 17rem; } }
+      @media screen and (max-width: 500px) {
+        .auth-page__flipper__main-text {
+          height: 5rem; } }
     .auth-page__flipper__text-fade {
       width: 100%;
       position: absolute;
@@ -343,6 +401,14 @@ input[type=number] {
       text-transform: capitalize;
       margin-bottom: 3rem;
       line-height: 5.8rem; }
+      @media screen and (max-width: 1020px) {
+        .auth-page__flipper__main-text h1 {
+          font-size: 3.8rem; } }
+      @media screen and (max-width: 500px) {
+        .auth-page__flipper__main-text h1 {
+          font-size: 2.6rem;
+          line-height: unset;
+          margin-bottom: 1rem; } }
     .auth-page__flipper__main-text p {
       font-size: 2.2rem;
       letter-spacing: 0;
@@ -350,6 +416,14 @@ input[type=number] {
       text-align: center;
       margin-bottom: 3rem;
       padding: 0 1rem; }
+      @media screen and (max-width: 1020px) {
+        .auth-page__flipper__main-text p {
+          font-size: 2rem; } }
+      @media screen and (max-width: 500px) {
+        .auth-page__flipper__main-text p {
+          margin-bottom: 1rem;
+          font-size: 1.8rem;
+          line-height: 1.6; } }
     .auth-page__flipper > button {
       position: relative;
       height: 5.4rem;
@@ -364,6 +438,10 @@ input[type=number] {
       flex-direction: row;
       justify-content: center;
       align-items: center; }
+      @media screen and (max-width: 500px) {
+        .auth-page__flipper > button {
+          width: 18rem;
+          height: 4.2rem; } }
       .auth-page__flipper > button > span,
       .auth-page__flipper > button > svg {
         color: #1a1e1d;
@@ -386,15 +464,23 @@ input[type=number] {
           color: #3bb497; }
       .auth-page__flipper > button:active {
         background-color: #fff; }
+      @media screen and (max-width: 500px) {
+        .auth-page__flipper > button {
+          position: absolute;
+          bottom: 1rem; } }
   .auth-page__content {
     flex-grow: 1;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center; }
+    @media screen and (max-width: 500px) {
+      .auth-page__content {
+        height: 100%; } }
   .auth-page__form {
     width: 100%;
     max-width: 69rem;
+    height: 100%;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -413,6 +499,10 @@ input[type=number] {
       flex-direction: column;
       justify-content: center;
       align-items: center; }
+      @media screen and (max-width: 500px) {
+        .auth-page__form__wrapper {
+          height: auto;
+          min-height: unset; } }
     .auth-page__form__wrapper--active {
       transition: all .5s;
       transform: scale(1);
@@ -431,6 +521,10 @@ input[type=number] {
       flex-direction: row;
       justify-content: center;
       align-items: center; }
+      @media screen and (max-width: 500px) {
+        .auth-page__form__wrapper > button {
+          width: 18rem;
+          height: 4.2rem; } }
       .auth-page__form__wrapper > button > span,
       .auth-page__form__wrapper > button > svg {
         color: #fff;
@@ -456,6 +550,20 @@ input[type=number] {
     .auth-page__form__wrapper > h1 {
       color: #1a1e1d;
       font-size: 5.6rem; }
+      @media screen and (max-width: 1020px) {
+        .auth-page__form__wrapper > h1 {
+          font-size: 3.8rem; } }
+      @media screen and (max-width: 500px) {
+        .auth-page__form__wrapper > h1 {
+          font-size: 2.6rem; } }
+    .auth-page__form__wrapper__group {
+      width: 100%;
+      max-width: 46rem;
+      margin-bottom: 2rem; }
+      @media screen and (max-width: 500px) {
+        .auth-page__form__wrapper__group {
+          max-width: 80%;
+          margin-bottom: 1rem; } }
     .auth-page__form__wrapper__group > figure {
       width: 100%;
       height: 1px;
@@ -463,10 +571,9 @@ input[type=number] {
       opacity: 0.5;
       margin: 1rem 0;
       padding-top: 1rem; }
-    .auth-page__form__wrapper__group {
-      width: 100%;
-      max-width: 46rem;
-      margin-bottom: 2rem; }
+      @media screen and (max-width: 500px) {
+        .auth-page__form__wrapper__group > figure {
+          margin: 0; } }
     .auth-page__form__wrapper__group__error {
       color: #ff1111;
       font-size: 1.4rem;
@@ -479,6 +586,9 @@ input[type=number] {
       text-decoration: underline;
       margin-top: 4rem;
       cursor: pointer; }
+      @media screen and (max-width: 500px) {
+        .auth-page__form__wrapper__demo-login {
+          font-size: 1.6rem; } }
 
 .main-controller {
   height: 100vh;
@@ -514,6 +624,11 @@ input[type=number] {
     flex-direction: row;
     justify-content: center;
     align-items: center; }
+    @media screen and (max-width: 500px) {
+      .main-controller__settings {
+        padding: 1rem;
+        padding-top: 4rem;
+        overflow-y: auto; } }
     .main-controller__settings > section {
       width: 100%;
       height: 100%;
@@ -533,6 +648,9 @@ input[type=number] {
       font-size: 3rem;
       color: #1a1e1d;
       margin-bottom: 3rem; }
+      @media screen and (max-width: 500px) {
+        .main-controller__settings--form > h1 {
+          font-size: 2.2rem; } }
     .main-controller__settings--form > .custom-input {
       margin-bottom: 2rem; }
     .main-controller__settings--form > button {
@@ -550,6 +668,10 @@ input[type=number] {
       flex-direction: row;
       justify-content: center;
       align-items: center; }
+      @media screen and (max-width: 500px) {
+        .main-controller__settings--form > button {
+          width: 18rem;
+          height: 4.2rem; } }
       .main-controller__settings--form > button > span,
       .main-controller__settings--form > button > svg {
         color: #fff;
@@ -572,6 +694,10 @@ input[type=number] {
           color: #fff; }
       .main-controller__settings--form > button:active {
         background-color: #28b498; }
+      @media screen and (max-width: 500px) {
+        .main-controller__settings--form > button {
+          position: relative;
+          margin: 2rem 0; } }
     .main-controller__settings--form__errors {
       color: #ff1111; }
     .main-controller__settings--form__shifts {
@@ -623,16 +749,34 @@ input[type=number] {
   flex-direction: row;
   justify-content: space-between;
   align-items: center; }
+  @media screen and (max-width: 500px) {
+    .settings-shifts__header {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center; } }
   .settings-shifts__header > svg {
     font-size: 2rem; }
+    @media screen and (max-width: 500px) {
+      .settings-shifts__header > svg {
+        margin-top: 1rem; } }
   .settings-shifts__header__row {
     display: flex;
     flex-direction: row;
     justify-content: unset;
     align-items: center; }
+    @media screen and (max-width: 500px) {
+      .settings-shifts__header__row {
+        margin-top: 1rem; } }
     .settings-shifts__header__row > svg {
       font-size: 2.5rem;
       margin-left: 1rem; }
+    @media screen and (max-width: 375px) {
+      .settings-shifts__header__row > aside {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center; } }
 
 .shifts__wrapper {
   width: 100%; }
@@ -642,31 +786,58 @@ input[type=number] {
     flex-direction: row;
     justify-content: space-between;
     align-items: center; }
+    @media screen and (max-width: 500px) {
+      .shifts__wrapper__group {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start; } }
   .shifts__wrapper__group:last-of-type {
     margin-bottom: 0; }
   .shifts__wrapper__group > p {
     padding-right: 1rem; }
+    @media screen and (max-width: 500px) {
+      .shifts__wrapper__group > p {
+        margin-bottom: 1rem;
+        margin-left: 0.5rem; } }
   .shifts__wrapper__group--50w {
     width: calc(50% - 2rem);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center; }
+    @media screen and (max-width: 500px) {
+      .shifts__wrapper__group--50w {
+        width: 100%;
+        margin-bottom: 2rem; } }
   .shifts__wrapper__group--100w {
     width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center; }
+    @media screen and (max-width: 500px) {
+      .shifts__wrapper__group--100w {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start; } }
     .shifts__wrapper__group--100w > div {
       flex-shrink: 1;
       display: flex;
       flex-direction: row;
       justify-content: flex-start;
       align-items: center; }
+      @media screen and (max-width: 500px) {
+        .shifts__wrapper__group--100w > div {
+          width: 100%;
+          margin-top: 2rem; } }
     .shifts__wrapper__group--100w > div > .custom-input {
       width: 9rem;
       margin: 0 1rem; }
+      @media screen and (max-width: 500px) {
+        .shifts__wrapper__group--100w > div > .custom-input {
+          flex-grow: 1; } }
     .shifts__wrapper__group--100w > p {
       flex-grow: 1;
       padding-right: 1rem; }
@@ -838,6 +1009,9 @@ input[type=number] {
     @media screen and (max-width: 1020px) {
       .employees-list__content {
         width: 100%; } }
+    @media screen and (max-width: 500px) {
+      .employees-list__content {
+        padding-left: 0.8rem; } }
     @media screen and (max-width: 1020px) {
       .employees-list__content > div {
         display: flex;
@@ -886,6 +1060,10 @@ input[type=number] {
       flex-direction: row;
       justify-content: center;
       align-items: center; }
+      @media screen and (max-width: 500px) {
+        .employees-list__footer > button {
+          width: 18rem;
+          height: 4.2rem; } }
       .employees-list__footer > button > span,
       .employees-list__footer > button > svg {
         color: #fff;
@@ -922,12 +1100,17 @@ input[type=number] {
   flex-direction: row;
   justify-content: space-between;
   align-items: center; }
+  @media screen and (max-width: 500px) {
+    .employees-draggable {
+      height: 3.6rem; } }
   @media screen and (max-width: 1020px) {
     .employees-draggable--list {
-      width: calc(25% - 0.6rem);
-      margin-right: 0.8rem; }
-      .employees-draggable--list:nth-of-type(4n) {
-        margin-right: 0; } }
+      width: calc(25% - 0.8rem);
+      margin-right: 0.8rem; } }
+  @media screen and (max-width: 500px) {
+    .employees-draggable--list {
+      width: calc(50% - 0.4rem);
+      margin-right: 0.4rem; } }
   .employees-draggable > svg {
     font-size: 2.2rem; }
   .employees-draggable > div {
@@ -960,15 +1143,28 @@ input[type=number] {
     flex-direction: row;
     justify-content: space-between;
     align-items: center; }
+    @media screen and (max-width: 500px) {
+      .calender__header {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        height: 7rem; } }
   .calender__header__section {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center; }
+    @media screen and (max-width: 500px) {
+      .calender__header__section {
+        margin-bottom: 1.2rem; } }
     .calender__header__section > p {
       font-weight: bold;
       font-size: 2rem;
       color: #1a1e1d; }
+      @media screen and (max-width: 500px) {
+        .calender__header__section > p {
+          font-size: 1.8rem; } }
     .calender__header__section > figure {
       cursor: pointer;
       transition: all .2s;
@@ -1055,6 +1251,9 @@ input[type=number] {
       @media screen and (max-width: 1300px) {
         .calender__week__header {
           font-size: 1.5rem; } }
+      @media screen and (max-width: 500px) {
+        .calender__week__header {
+          height: 3rem; } }
     .calender__week__day {
       width: calc(100% / 7);
       height: 100%;
@@ -1063,6 +1262,9 @@ input[type=number] {
         .calender__week__day {
           width: calc(25% + 0.5px);
           flex-shrink: 0; } }
+      @media screen and (max-width: 1020px) {
+        .calender__week__day {
+          width: calc(50% + 0.5px); } }
     .calender__week__day:last-of-type {
       border: none; }
     .calender__week__shifts {
@@ -1074,6 +1276,9 @@ input[type=number] {
     .calender__week__shifts__container {
       width: 100%;
       position: relative; }
+      @media screen and (max-width: 500px) {
+        .calender__week__shifts__container:last-of-type .shifts-header__tooltip {
+          height: calc(100% - 1rem); } }
     .calender__week .shifts-header {
       width: 100%;
       height: 2.5rem;
@@ -1121,6 +1326,9 @@ input[type=number] {
       flex-direction: column;
       justify-content: flex-start;
       align-items: center; }
+      @media screen and (max-width: 500px) {
+        .calender__week .shifts-header__tooltip__content > section {
+          margin-bottom: 0; } }
     @media screen and (max-height: 900px) {
       .calender__week .shifts-header__tooltip__content__icon--hide {
         display: none; } }

@@ -61,7 +61,6 @@ const Employees = (props) => {
         // block api calls if all employees from DB are fetched already
         if (blockApi)
             return;
-
         setLoading(true);
 
         let employeesResponse = await generalGetRequest(
@@ -84,7 +83,7 @@ const Employees = (props) => {
         //calc scroll bottom for more data fetching (number 2 is 1 px border top and bottom, 100 is px offset for data fetch)
         let scrolledToOffset = EMPLOYEE_LIST_ELEMENT.scrollTop >= (EMPLOYEE_LIST_ELEMENT.scrollHeight - EMPLOYEE_LIST_ELEMENT.offsetHeight + 2) - 100;
 
-        if (scrolledToOffset) {
+        if (scrolledToOffset && !loading) {
             setPaginationData({ ...paginationData, skip: paginationData.skip + paginationData.limit });
         }
     }
@@ -141,6 +140,7 @@ const Employees = (props) => {
 
     const resetSearch = () => {
         // reset all search params
+        setBlockApi(false);
         setEmployees([]);
         setLoading(true);
         setSearchResetButton(false);
@@ -182,7 +182,9 @@ const Employees = (props) => {
                                 className="employees-list__search__auto-complete--no-results"
                                 onMouseEnter={setBlurBlocker.bind(null, true)}
                                 onMouseLeave={setBlurBlocker.bind(null, false)}
-                            >No results</div>
+                            >
+                                No results
+                            </div>
                             :
                             null
                         }

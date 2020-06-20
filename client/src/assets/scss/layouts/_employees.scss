@@ -106,6 +106,9 @@
         @include mediaMaxWidth($tablet){
             width: 100%;
         }
+        @include mediaMaxWidth($mobile){
+            padding-left:0.8rem;
+        }
 
         & > div {
             @include mediaMaxWidth($tablet){
@@ -161,15 +164,18 @@
     font-size: 1.4rem;
     padding: 0 0.6rem;
     @include displayFlex(row, space-between, center);
+    @include mediaMaxWidth($mobile){
+        height: 3.6rem;
+    }
 
     &--list {
         @include mediaMaxWidth($tablet){
-            width: calc(25% - 0.6rem);
+            width: calc(25% - 0.8rem);
             margin-right: 0.8rem;
-
-            &:nth-of-type(4n){
-                margin-right: 0;
-            }
+        }
+        @include mediaMaxWidth($mobile){
+            width: calc(50% - 0.4rem);
+            margin-right: 0.4rem;
         }
     }
 

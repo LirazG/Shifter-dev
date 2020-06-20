@@ -5,6 +5,9 @@
     @include mediaMaxWidth($tablet) {
         @include displayFlex(column); 
     }
+    @include mediaMaxWidth($mobile) {
+        min-height: fit-content;
+    }
 
     &__flipper {
         background-image: $gradient-primary;
@@ -19,6 +22,12 @@
             width: 100%;
             padding: 3rem 0;
         }
+        @include mediaMaxWidth($mobile) {
+            // height: 18.5rem;
+            height: 30vh;
+            padding: 2rem 0;
+            @include displayFlex(column,flex-start,center);
+        }
 
         &__shape {
             position: absolute;
@@ -29,12 +38,24 @@
                 left: 30%;
                 transform: rotate(40deg);
                 @include triangle();
+                @include mediaMaxWidth($tablet) {
+                    bottom:10%;
+                    left: unset;
+                    right: 0;
+                }
+                @include mediaMaxWidth($mobile) {
+                    transform: rotate(40deg) scale(0.7);
+                    right: -10%;
+                }
             }
 
             &:nth-of-type(2) {
                 top: 10%;
                 left: -10%;
                 @include circle(25rem);
+                @include mediaMaxWidth($mobile) {
+                    transform: scale(0.7);
+                }
             }
 
             &:nth-of-type(3) {
@@ -42,6 +63,13 @@
                 left: -20%;
                 transform: rotate(20deg);
                 @include square();
+                @include mediaMaxWidth($tablet) {
+                    top:15%;
+                    left: 30%;
+                }
+                @include mediaMaxWidth($mobile) {
+                    display: none;
+                }
             }
             
         }
@@ -53,6 +81,9 @@
             height: 24rem;
             @include mediaMaxWidth($tablet) {
                 height: 17rem;
+            }
+            @include mediaMaxWidth($mobile) {
+                height: 5rem;
             }
         }
 
@@ -91,6 +122,15 @@
             text-transform: capitalize;
             margin-bottom: 3rem;
             line-height: 5.8rem;
+            @include mediaMaxWidth($tablet) {
+                font-size: 3.8rem;
+            }
+
+            @include mediaMaxWidth($mobile) {
+                font-size: 2.6rem;
+                line-height: unset;
+                margin-bottom: 1rem;
+            }
         }
 
         &__main-text p {
@@ -100,22 +140,38 @@
             text-align: center;
             margin-bottom: 3rem;
             padding: 0 1rem;
+            @include mediaMaxWidth($tablet) {
+                font-size: 2rem;
+            }
+            @include mediaMaxWidth($mobile) {
+                margin-bottom: 1rem;
+                font-size: 1.8rem;
+                line-height: 1.6;
+            }
         }
 
         & > button {
             position: relative;
             @include button();
+            @include mediaMaxWidth($mobile) {
+               position: absolute;
+               bottom: 1rem;
+            }
         }
     }
 
     &__content {
         flex-grow: 1;
         @include displayFlex(row,center,center);
+        @include mediaMaxWidth($mobile) {
+            height: 100%;
+        }
     }
 
     &__form {
         width: 100%;
         max-width: 69rem;
+        height: 100%;
         position: relative;
         @include displayFlex(column,center,center);
 
@@ -129,6 +185,10 @@
             opacity: 0;
             z-index: -1;
             @include displayFlex(column,center,center);
+            @include mediaMaxWidth($mobile) {
+                height: auto;
+                min-height: unset;
+            }
         }
 
         &__wrapper--active {
@@ -145,6 +205,22 @@
         &__wrapper > h1 {
             color: $blackish-text;
             font-size: 5.6rem;
+            @include mediaMaxWidth($tablet) {
+                font-size: 3.8rem;
+            }
+            @include mediaMaxWidth($mobile) {
+                font-size: 2.6rem;
+            }
+        }
+
+        &__wrapper__group {
+            width:100%;
+            max-width: 46rem;
+            margin-bottom: 2rem;
+            @include mediaMaxWidth($mobile) {
+                max-width: 80%;
+                margin-bottom: 1rem;
+            }
         }
 
         &__wrapper__group > figure {
@@ -154,12 +230,9 @@
             opacity: 0.5;
             margin: 1rem 0;
             padding-top:1rem;
-        }
-
-        &__wrapper__group {
-            width:100%;
-            max-width: 46rem;
-            margin-bottom: 2rem;
+            @include mediaMaxWidth($mobile) {
+                margin:0;
+            }
         }
 
         &__wrapper__group__error {
@@ -176,6 +249,9 @@
             text-decoration: underline;
             margin-top: 4rem;
             cursor: pointer;
+            @include mediaMaxWidth($mobile) {
+                font-size: 1.6rem;
+            }
         }
 
     }

@@ -21,6 +21,9 @@
         animation-name: activeModalContent;
         animation-duration: 0.4s;
         animation-fill-mode: forwards;
+        @include mediaMaxWidth($mobile) {
+            animation-name: activeModalContentMobile;
+        }
     }
 
     &__curtain {
@@ -30,7 +33,6 @@
     }
 
     &__content {
-        // height: 80%;
         height: 68rem;
         width: 100%;
         max-width: 50rem;
@@ -41,6 +43,15 @@
         left:50%;
         border-top: 10px solid $color-primary;
         transform: translate3d(-50%, -10%, 0);
+        @include mediaMaxWidth($mobile) {
+            height: 100%;
+            width: 100%;
+            top:0;
+            left:0;
+            transform: translate3d(0, -10%, 0);
+            border:none;
+            border-radius: 0;
+        }
 
         .custom-modal &__close-icon {
             position: absolute;
@@ -49,6 +60,10 @@
             cursor: pointer;
             font-size: 2.5rem;
             z-index: 20;
+            @include mediaMaxWidth($mobile) {
+                top:1rem;
+                right:1rem;
+            }
         }
     }
 
@@ -73,5 +88,15 @@
 
     100% {
         transform: translate3d(-50%, 0, 0);
+    }
+}
+
+@keyframes activeModalContentMobile {
+    0% {
+        transform: translate3d(0, -10%, 0);
+    }
+
+    100% {
+        transform: translate3d(0, 0, 0);
     }
 }

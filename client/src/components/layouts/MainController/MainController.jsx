@@ -57,7 +57,9 @@ const MainController = () => {
     // cancel scroll when modal opens
     useEffect(() => {
         if (activeModal) {
-            document.body.style.overflow = 'hidden';
+            setTimeout(() => {
+                document.body.style.overflow = 'hidden';
+            }, 200);
         } else {
             document.body.style.overflow = '';
         }

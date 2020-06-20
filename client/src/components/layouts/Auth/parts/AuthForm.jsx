@@ -123,6 +123,7 @@ const AuthForm = (props) => {
             email: 'demo@gmail.com',
             password: '111111'
         };
+        setLoading(true);
         let loginRes = await generalPostRequest(AUTH_ROUTES_LOGIN, demoCredentials);
         Cookies.set(AUTH_COOKIE, loginRes.token, { expires: 7 });
         userDataDispatch({ type: FETCH_USER_DATA, payload: loginRes.userData });

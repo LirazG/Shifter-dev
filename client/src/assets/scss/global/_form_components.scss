@@ -11,6 +11,9 @@
     -webkit-transition: background .3s;
     transition: background .3s;
     @include displayFlex(row,space-between,center);
+    @include mediaMaxWidth($mobile) {
+        height: 4.2rem;
+    }
 
     & > input,
     & > input::placeholder {

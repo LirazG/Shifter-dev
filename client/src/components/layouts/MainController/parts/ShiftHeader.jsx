@@ -27,7 +27,10 @@ const ShiftHeader = (props) => {
             <p>{props.name}</p>
             {deleteMode ?
                 <span className="settings-shifts__header__row">
-                    <p>Delete shift ? (all data will be lost)</p>
+                    <aside>
+                        <span> Delete shift ? </span>
+                        <span>(all data will be lost)</span>
+                    </aside>
                     <SvgIcon
                         component={CheckIcon}
                         onClick={(e) => { handleDelete(e) }}

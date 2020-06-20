@@ -21,6 +21,10 @@
     overflow: hidden;
     flex-shrink: 0;
     @include displayFlex(row,center,center);
+    @include mediaMaxWidth($mobile) {
+        width: 18rem;
+        height: 4.2rem;
+    }
 
     & > span,
     & > svg {

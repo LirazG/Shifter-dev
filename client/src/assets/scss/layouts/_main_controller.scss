@@ -26,6 +26,11 @@
        width: 100%;
        padding: 3rem 2rem;
        @include displayFlex(row, center, center);
+       @include mediaMaxWidth($mobile) {
+           padding: 1rem;
+           padding-top:4rem;
+           overflow-y: auto;
+       }
 
        & > section {
            width:100%;
@@ -44,6 +49,9 @@
            font-size: 3rem;
            color: $blackish-text;
            margin-bottom: 3rem;
+           @include mediaMaxWidth($mobile){
+              font-size: 2.2rem;
+           }
        }
 
        &--form > .custom-input {
@@ -54,6 +62,10 @@
            position: absolute;
            bottom: 0;
            @include button($color-white, $color-primary, $color-white, $color-primary-hover, none);
+           @include mediaMaxWidth($mobile) {
+               position: relative;
+               margin: 2rem 0;
+           }
        }
 
        &--form__errors {
@@ -126,17 +138,31 @@
 .settings-shifts__header {
     width: 100%;
     @include displayFlex(row, space-between,center);
+    @include mediaMaxWidth($mobile) {
+        @include displayFlex(column, center,center);
+    }
 
     & > svg {
         font-size: 2rem;
+        @include mediaMaxWidth($mobile) {
+            margin-top:1rem;
+        }
     }
 
     &__row {
         @include displayFlex(row,unset,center);
-
+        @include mediaMaxWidth($mobile) {
+            margin-top:1rem;
+        }
         & > svg {
             font-size: 2.5rem;
             margin-left: 1rem;
+        }
+        
+        & > aside {
+            @include mediaMaxWidth(375px) {
+                @include displayFlex(column, center,center);
+            }
         }
     }
 }
@@ -147,6 +173,9 @@
     &__group {
         margin-bottom: 3rem;
         @include displayFlex(row, space-between,center);
+        @include mediaMaxWidth($mobile) {
+            @include displayFlex(column, flex-start,flex-start);
+        }
     }
 
     &__group:last-of-type {
@@ -155,25 +184,43 @@
 
     &__group > p { 
         padding-right: 1rem;
+        @include mediaMaxWidth($mobile) {
+            margin-bottom: 1rem;
+            margin-left: 0.5rem;
+        }
     }
 
     &__group--50w { 
         width:calc(50% - 2rem);
         @include displayFlex(column,center,center);
+        @include mediaMaxWidth($mobile) {
+            width: 100%;
+            margin-bottom: 2rem;
+        }
     }
 
     &__group--100w { 
         width:100%;
         @include displayFlex(row,space-between,center);
+        @include mediaMaxWidth($mobile) {
+            @include displayFlex(column, flex-start,flex-start);
+        }
 
         & > div {
             flex-shrink: 1;
             @include displayFlex(row,flex-start,center);
+            @include mediaMaxWidth($mobile) {
+                width: 100%;
+                margin-top:2rem;
+            }
         }
 
         & > div > .custom-input {
             width: 9rem;
             margin: 0 1rem;
+            @include mediaMaxWidth($mobile) {
+                flex-grow: 1;
+            }
         }
 
         & > p {

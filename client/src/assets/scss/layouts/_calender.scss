@@ -15,15 +15,25 @@
         height: 6.6rem;
         padding-bottom:1.6rem;
         @include displayFlex(row, space-between, center);
+        @include mediaMaxWidth($mobile) {
+            @include displayFlex(column, space-between, center);
+            height: 7rem;
+        }
     }
 
     &__header__section {
         @include displayFlex(row, space-between, center);
+        @include mediaMaxWidth($mobile) {
+            margin-bottom: 1.2rem;
+        }
 
         & > p {
             font-weight: bold;
             font-size: 2rem;
             color: $blackish-text;
+            @include mediaMaxWidth($mobile) {
+                font-size: 1.8rem;
+            }
         }
 
         & > figure {
@@ -114,6 +124,9 @@
             @include mediaMaxWidth($laptop-small) {
                 font-size: 1.5rem;
             }
+            @include mediaMaxWidth($mobile) {
+                height: 3rem;
+            }
         }
 
         &__day {
@@ -123,6 +136,9 @@
             @include mediaMaxWidth($tablet) {
                 width: calc(25% + 0.5px);
                 flex-shrink: 0;
+            }
+            @include mediaMaxWidth($tablet) {
+                width: calc(50% + 0.5px);
             }
         }
 
@@ -138,6 +154,11 @@
         &__shifts__container {
             width: 100%;
             position: relative;
+            @include mediaMaxWidth($mobile) {
+                &:last-of-type .shifts-header__tooltip{
+                    height: calc(100% - 1rem);
+                }
+            }
         }
 
         & .shifts-header {
@@ -188,6 +209,9 @@
             width: 100%;
             margin-bottom: 0.5rem;
             @include displayFlex(column,flex-start,center);
+            @include mediaMaxWidth($mobile) {
+                margin-bottom: 0;
+            }
         }
 
         & .shifts-header__tooltip__content__icon--hide {
