@@ -1,5 +1,4 @@
-
 {
-    "mongoURI": "",
-    "jwtSecret": ""
+    "mongoURI": "mongodb+srv://lirazga1993:sapakolina1@cluster0-ts7pp.mongodb.net/shifter?retryWrites=true&w=majority",
+    "jwtSecret": "KsxzZ46sbg6wFFEss9"
 }
