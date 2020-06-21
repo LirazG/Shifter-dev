@@ -170,7 +170,10 @@ const Employees = (props) => {
                                 onClick={resetSearch}
                             />
                             :
-                            <SvgIcon component={SearchIcon} />
+                            <SvgIcon
+                                component={SearchIcon}
+                                onClick={searchEmployee.bind(null, 'click')}
+                            />
                     }
 
                 </figure>

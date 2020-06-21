@@ -4,6 +4,7 @@ import { Droppable, Draggable } from 'react-beautiful-dnd';
 import SvgIcon from '@material-ui/core/SvgIcon';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
+import TouchAppOutlinedIcon from '@material-ui/icons/TouchAppOutlined';
 //context
 import { ShiftConfigurationContext } from '../../../contexts/ShiftConfigurationContext';
 import { UserDataContext } from '../../../contexts/UserDataContext';
@@ -74,7 +75,6 @@ const Calender = (props) => {
 
     //determine if date in past
     let isPast = moment(selectedDate).startOf('week').valueOf() < moment().startOf('week').valueOf();
-
     return (
         <div className="calender">
             <CalenderHeader
@@ -82,6 +82,13 @@ const Calender = (props) => {
                 changeCalenderData={props.setSelectedDate}
                 isPast={isPast}
             />
+
+            <figure className="calender__mobile-touch">
+                <SvgIcon
+                    component={TouchAppOutlinedIcon}
+                />
+            </figure>
+
             <section className="calender__week">
                 {isPast && !loading ?
                     <aside className="calender__week__past-curtain"></aside>
@@ -124,22 +131,30 @@ const Calender = (props) => {
                                                     // render only if in same shift
                                                     deploy.shiftId === shift._id ?
                                                         <Draggable draggableId={deploy._id} key={deploy._id} index={deployIndex}>
-                                                            {(provided, snapshot) => (
-                                                                <div
-                                                                    ref={provided.innerRef}
-                                                                    {...provided.draggableProps}
-                                                                    {...provided.dragHandleProps}
-                                                                    className={"employees-draggable employees-draggable--calender"}
-                                                                >
-                                                                    <div>
-                                                                        <h4>{deploy.employee.fullName}</h4>
-                                                                        <h4>{deploy.employee.title ? deploy.employee.title : null}</h4>
+                                                            {(provided, snapshot) => {
+                                                                const style = {
+                                                                    opacity: deploy._id === 'temp' ? '0.5' : '1',
+                                                                    pointerEvents: deploy._id === 'temp' ? 'none' : 'initial',
+                                                                    ...provided.draggableProps.style,
+                                                                };
+                                                                return (
+                                                                    <div
+                                                                        ref={provided.innerRef}
+                                                                        {...provided.draggableProps}
+                                                                        {...provided.dragHandleProps}
+                                                                        style={style}
+                                                                        className={"employees-draggable employees-draggable--calender"}
+                                                                    >
+                                                                        <div>
+                                                                            <h4>{deploy.employee.fullName}</h4>
+                                                                            <h4>{deploy.employee.title ? deploy.employee.title : null}</h4>
+                                                                        </div>
+                                                                        <SvgIcon
+                                                                            component={DragIndicatorIcon}
+                                                                        />
                                                                     </div>
-                                                                    <SvgIcon
-                                                                        component={DragIndicatorIcon}
-                                                                    />
-                                                                </div>
-                                                            )}
+                                                                )
+                                                            }}
                                                         </Draggable>
                                                         :
                                                         null

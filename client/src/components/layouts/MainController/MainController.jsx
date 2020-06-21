@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
 import moment from 'moment';
 import { DragDropContext } from 'react-beautiful-dnd';
-import { v4 as uuidv4 } from 'uuid';
 //icons
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
@@ -51,7 +50,6 @@ const MainController = () => {
         return () => {
             document.removeEventListener('scroll', checkScrollPosition);
         }
-
     }, []);
 
     // cancel scroll when modal opens
@@ -161,8 +159,8 @@ const MainController = () => {
 
         //prepare body object for api call - send deployment to server
         let body = {
-            //generate unique id for new instence of deploy object yet initialized in server
-            _id: uuidv4(),
+            // temporary id for new instence of deploy object yet initialized in server
+            _id: 'temp',
             userId: userData._id,
             deployDate: moment(selectedDate).add(dayIndex, 'days').toISOString(),
             employee: dndAction.draggableId,
@@ -171,7 +169,7 @@ const MainController = () => {
 
         //set change in state for smooth DND experience
         newDeploymentsState[dayIndex].push({ ...body, employee: draggedEmployee });
-        setDeployments(newDeploymentsState);
+        setDeployments([...newDeploymentsState]);
 
         //send deployment to server
         let newDeploy = await generalPostRequest(DEPLOY, body);
@@ -183,6 +181,10 @@ const MainController = () => {
                 alert(newDeploy.data.errors.map(err => err.msg))
             }
             setDeployments(oldStateCopy)
+        } else {
+            let tempIndex = newDeploymentsState[dayIndex].findIndex(item => item._id === 'temp');
+            newDeploymentsState[dayIndex][tempIndex]._id = newDeploy.data._id;
+            setDeployments(newDeploymentsState);
         }
     }
 

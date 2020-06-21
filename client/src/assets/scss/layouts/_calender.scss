@@ -4,10 +4,62 @@
     background-color: $color-white;
     border-radius: 5px;
     padding:1.6rem;
+    position: relative;
     @include mediaMaxWidth($tablet) {
         width: 100%;
         height: calc(100vh - 11.2rem);
         flex-shrink: 0;
+    }
+
+    &__mobile-touch {
+        display: none;
+        position: absolute;
+        bottom: 1.5rem;
+        left:50%;
+        transform: translateX(-50%) rotate(-30deg);
+        animation: dragAnimation 6s infinite ease-in-out;
+        animation-delay: 3s;
+        animation-fill-mode: both;
+        @include mediaMaxWidth($tablet) {
+            display: initial;
+        }
+
+        & > svg {
+            color: $color-primary;
+            font-size: 3rem;
+        }
+    }
+
+    @keyframes dragAnimation {
+        0%{
+            opacity: 0;
+            transform: translateX(-50%) rotate(-30deg);
+        }
+
+        40%{
+            opacity: 0;
+            transform: translateX(-50%) rotate(-30deg);
+        }
+
+        50% {
+            opacity: 1;
+            transform: translateX(-50%) rotate(-30deg);
+        }
+
+        70% {
+            opacity: 1;
+            transform: translateX(-50%) rotate(30deg);
+        }
+
+        90% {
+            opacity: 1;
+            transform: translateX(-50%) rotate(-30deg);
+        }
+
+        100% {
+            opacity: 0;
+            transform: translateX(-50%) rotate(-30deg);
+        }
     }
 
     &__header {

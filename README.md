@@ -1,7 +1,5 @@
-# sales-crm
+## Shifter
+Shifter is a platform which helps business owners to easly set their employees into working shifts.
+users can define shifts structure, hours and employees as long with comfortable drag and drop deployment system.
 
-# ** 
-This is a boilerplate for express-cra-scss project, don't forget to add your keys and secret strings to .gitignore when commiting!
-
-# **
-run yarn dev at root directory to run server (port 5000), client (port 3000), and SCSS compiler all together
+This project was build with node.js and express on the server side and react on the front end side (including react hooks and react context api).

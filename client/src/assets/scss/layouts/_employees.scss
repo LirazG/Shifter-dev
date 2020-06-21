@@ -31,6 +31,7 @@
         & > figure {
             margin-right: 0.4rem;
             flex-shrink: 0;
+            cursor: pointer;
             @include circle(4rem, $color-primary);
             @include displayFlex(row, center, center);
             // @include mediaMaxWidth($laptop-small){

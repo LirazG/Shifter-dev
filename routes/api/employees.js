@@ -27,7 +27,7 @@ router.post('/', [
 
     //See if employee exists
     try {
-        let employee = await Employee.findOne({ fullName });
+        let employee = await Employee.findOne({ userId, fullName });
         if (employee) {
             return res.status(400).json({ errors: [{ param: 'fullName', msg: 'Employee already exists' }] });
         }
